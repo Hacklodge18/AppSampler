@@ -1,12 +1,9 @@
 package com.hacklodge.seattle.appsampler;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Icon;
+import android.net.Uri;
+import android.widget.ImageView;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.squareup.picasso.Picasso;
 
 /**
  * This class holds information about an app needed to install and launch the app. These include
@@ -16,15 +13,12 @@ public class AppHolder {
 
     private String packageName;
     private String appName;
-    private Bitmap icon;
+    private String icon;
 
     public AppHolder(String packageName, String appName, String icon) {
         this.packageName = packageName;
         this.appName = appName;
-        //try {
-            //URL iconURL = new URL(icon);
-            //this.icon = BitmapFactory.decodeStream(iconURL.openConnection().getInputStream());
-        //} catch (MalformedURLException e) {} catch (IOException e){}
+        this.icon = icon;
     }
 
     public String getPackageName() {
@@ -35,8 +29,8 @@ public class AppHolder {
         return appName;
     }
 
-    public Icon getIcon() {
-        return null;
+    public void loadIcon(ImageView imageView) {
+        Picasso.get().load(Uri.parse(icon)).into(imageView);
     }
 
     @Override

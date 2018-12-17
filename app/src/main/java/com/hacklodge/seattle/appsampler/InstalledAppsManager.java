@@ -1,6 +1,7 @@
 package com.hacklodge.seattle.appsampler;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,16 +32,20 @@ public class InstalledAppsManager {
         checkForUpdates(c);
     }
 
-    public void addInstalled(AppHolder app) {
-        installedPrograms.add(app);
+    public void addInstalled(Context c, AppHolder app) {
+        if (ensureInstalled(c, app.getPackageName())) {
+            installedPrograms.add(app);
+        }
     }
 
-    public void removeInstalled(AppHolder app) {
-        installedPrograms.remove(app);
+    public void removeInstalled(Context c, AppHolder app) {
+        if (!ensureInstalled(c, app.getPackageName())) {
+            installedPrograms.remove(app);
+        }
     }
 
-    public boolean isInstalled(AppHolder app) {
-        return installedPrograms.contains(app);
+    public boolean isInstalled(Context c, AppHolder app) {
+        return installedPrograms.contains(app) && ensureInstalled(c, app.getPackageName());
     }
 
     public List<AppHolder> shouldBeUninstalled() {
@@ -65,13 +70,25 @@ public class InstalledAppsManager {
             String decodedContent = new String(content);
             String[] parsed = decodedContent.split("\n");
             for (String s : parsed) {
-                if (! installedPrograms.contains(s)) {
+                if (! installedPrograms.contains(s) && ensureInstalled(c, s)) {
                     installedPrograms.add(new AppHolder(s, s, null));
                 }
             }
         } catch(IOException e) {
             installList.mkdir();
         }
+    }
+
+    private boolean ensureInstalled(Context c, String packageName) {
+        boolean found = true;
+
+        try {
+            c.getPackageManager().getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            found = false;
+        }
+
+        return found;
     }
 
     private void saveCurrentInstalled(Context c) {
@@ -94,7 +111,10 @@ public class InstalledAppsManager {
         AppHolder[] allApps = loadAppList(c);
         if (allApps == null) return false;
 
-        int platterIndex = 0;//findPlatterIndex();
+        int platterIndex = findPlatterIndex();
+        if (platterIndex < 0 || platterIndex >= allApps.length - 4) {
+            return false;
+        }
 
         boolean updated = false;
         for (int i = 0; i < 4; i++) {
