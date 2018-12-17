@@ -23,9 +23,11 @@ public class InstallUtility {
      */
     public static void launch(Context c, AppHolder app) {
         try {
-            Intent intent = new Intent(app.getPackageName());
+            Intent intent = c.getPackageManager().getLaunchIntentForPackage(app.getPackageName());
             c.startActivity(intent);
-        } catch (ActivityNotFoundException e) {}
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
