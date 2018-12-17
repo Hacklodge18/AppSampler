@@ -1,5 +1,7 @@
 package com.hacklodge.seattle.appsampler;
 
+import android.net.Uri;
+
 import java.io.File;
 
 /**
@@ -8,14 +10,14 @@ import java.io.File;
  */
 public class AppHolder {
 
-    String packageName;
-    String appName;
-    File apkPath;
+    private String packageName;
+    private String appName;
+    private Uri apkUri;
 
-    public AppHolder(String packageName, String appName, File apkPath) {
+    public AppHolder(String packageName, String appName, Uri apkUri) {
         this.packageName = packageName;
         this.appName = appName;
-        this.apkPath = apkPath;
+        this.apkUri = apkUri;
     }
 
     public String getPackageName() {
@@ -26,7 +28,7 @@ public class AppHolder {
         return appName;
     }
 
-    public File getApkPath() {
-        return apkPath;
+    public Uri getApkUri() {
+        return apkUri;
     }
 }
