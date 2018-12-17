@@ -41,7 +41,7 @@ public class InstallUtility {
         Intent goToMarket = new Intent(Intent.ACTION_VIEW)
                 .setData(Uri.parse("market://details?id=" + app.getPackageName()));
         c.startActivity(goToMarket);
-        manager.addInstalled(app);
+        manager.addInstalled(c, app);
     }
 
     /**
@@ -55,7 +55,7 @@ public class InstallUtility {
         intent.setData(Uri.parse("package:"+app.getPackageName()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         c.startActivity(intent);
-        manager.removeInstalled(app);
+        manager.removeInstalled(c, app);
     }
 
     /**
