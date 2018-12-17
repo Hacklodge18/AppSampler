@@ -51,10 +51,9 @@ public class InstallUtility {
      * @param app the information about the app to be uninstalled
      */
     public static void uninstall(Context c, AppHolder app, InstalledAppsManager manager) {
-        Intent intent = new Intent(Intent.ACTION_DELETE, Uri.fromParts("package",
-                c.getPackageManager()
-                        .getPackageArchiveInfo(app.getApkUri().getPath(), 0)
-                        .packageName,null));
+        Intent intent = new Intent(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:"+app.getPackageName()));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         c.startActivity(intent);
         manager.removeInstalled(app);
     }

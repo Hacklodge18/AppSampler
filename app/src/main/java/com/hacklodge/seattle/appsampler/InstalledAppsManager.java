@@ -2,10 +2,15 @@ package com.hacklodge.seattle.appsampler;
 
 import android.content.Context;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -64,7 +69,6 @@ public class InstalledAppsManager {
                     installedPrograms.add(new AppHolder(s, s, null));
                 }
             }
-
         } catch(IOException e) {
             installList.mkdir();
         }
@@ -87,35 +91,52 @@ public class InstalledAppsManager {
      * @return true if updates are found
      */
     public boolean checkForUpdates(Context c) {
+        AppHolder[] allApps = loadAppList(c);
+        if (allApps == null) return false;
+
+        int platterIndex = 0;//findPlatterIndex();
+
+        boolean updated = false;
+        for (int i = 0; i < 4; i++) {
+            if (! allApps[i+platterIndex].equals(platter[i])) {
+                updated = true;
+                platter[i] = allApps[i+platterIndex];
+            }
+        }
+
+        return updated;
+    }
+
+    private AppHolder[] loadAppList(Context c) {
+        String json = null;
         try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(c.getAssets().open("AppList.txt")));
-            int platterIndex = findPlatterIndex();
-            int count = 0;
-            String line = "";
-            String[] foundPlatter = new String[4];
-            while ((line = reader.readLine()) != null) {
-                if (count >= platterIndex) {
-                    if (count >= platterIndex+4) {
-                        break;
-                    }
-                    foundPlatter[count-platterIndex] = line;
-                }
-                count++;
+            InputStream is = c.getAssets().open("AppList.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        try {
+            JSONArray array = new JSONArray(json);
+            AppHolder[] appArray = new AppHolder[array.length()];
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonObject = array.getJSONObject(i);
+
+                String name = jsonObject.getString("name");
+                String packageName = jsonObject.getString("package");
+                String iconURL = jsonObject.getString("icon");
+                appArray[i] = new AppHolder(packageName, name, iconURL);
             }
 
-            boolean updated = false;
-            for (int i = 0; i < 4; i++) {
-                if (! foundPlatter[i].equals(platter[i].getPackageName())) {
-                    updated = true;
-                    platter[i] = new AppHolder(foundPlatter[i], foundPlatter[i], null);
-                }
-            }
-
-            return updated;
-
-        } catch(IOException e) {
-            return false;
+            return appArray;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

@@ -1,9 +1,12 @@
 package com.hacklodge.seattle.appsampler;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
-import android.net.Uri;
 
-import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * This class holds information about an app needed to install and launch the app. These include
@@ -13,12 +16,15 @@ public class AppHolder {
 
     private String packageName;
     private String appName;
-    private Uri apkUri;
+    private Bitmap icon;
 
-    public AppHolder(String packageName, String appName, Uri apkUri) {
+    public AppHolder(String packageName, String appName, String icon) {
         this.packageName = packageName;
         this.appName = appName;
-        this.apkUri = apkUri;
+        //try {
+            //URL iconURL = new URL(icon);
+            //this.icon = BitmapFactory.decodeStream(iconURL.openConnection().getInputStream());
+        //} catch (MalformedURLException e) {} catch (IOException e){}
     }
 
     public String getPackageName() {
@@ -29,11 +35,17 @@ public class AppHolder {
         return appName;
     }
 
-    public Uri getApkUri() {
-        return apkUri;
-    }
-
     public Icon getIcon() {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (! (other instanceof AppHolder)) {
+            return false;
+        }
+
+        AppHolder otherApp = (AppHolder) other;
+        return packageName.equals(otherApp.getPackageName());
     }
 }
