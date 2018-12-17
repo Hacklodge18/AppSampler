@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.content.Intent;
 import android.net.Uri;
 import java.util.*;
+import android.widget.ImageView;
 
 
 public class Platter extends AppCompatActivity {
@@ -26,6 +27,8 @@ public class Platter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_platter);
         Manager = new InstalledAppsManager(this.getApplicationContext());
+        ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
+        a1.loadIcon(appIMG1);
         ArrayList<Button> buttons= new ArrayList<Button>();
         appB1 = (Button)findViewById(R.id.app1);
         appB2 = (Button)findViewById(R.id.app2);
@@ -41,7 +44,7 @@ public class Platter extends AppCompatActivity {
         apps.add(a3);
         apps.add(a4);
         for(int i = 0; i < apps.size(); i++) {
-            if (Manager.isInstalled(apps.get(i)) == false) {
+            if (Manager.isInstalled( this.getApplicationContext(),apps.get(i)) == false) {
                 buttons.get(i).setText("Install");
             } else {
                 buttons.get(i).setText("Play");
@@ -51,17 +54,18 @@ public class Platter extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(Manager.isInstalled(a1) == false) {
+                if(Manager.isInstalled(view.getContext(), a1) == false) {
                     InstallUtility.install(view.getContext() , a1, Manager);
                     appB1.setText("Play");
                 }else {
+                    InstallUtility.launch(view.getContext(), a1);
                 }
             }
         });
         appB2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Manager.isInstalled(a2) == false) {
+                if(Manager.isInstalled(view.getContext(),a2) == false) {
                     InstallUtility.install(view.getContext(), a2, Manager);
                     appB2.setText("Play");
                 }else{
@@ -72,7 +76,7 @@ public class Platter extends AppCompatActivity {
         appB3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Manager.isInstalled(a3) == false) {
+                if(Manager.isInstalled(view.getContext(),a3) == false) {
                     InstallUtility.install(view.getContext(), a3, Manager);
                     appB3.setText("Play");
                 }else{
@@ -83,7 +87,7 @@ public class Platter extends AppCompatActivity {
         appB4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Manager.isInstalled(a4) == false) {
+                if(Manager.isInstalled(view.getContext(),a4) == false) {
                     InstallUtility.install(view.getContext(), a4, Manager);
                     appB4.setText("Play");
                 }else{
