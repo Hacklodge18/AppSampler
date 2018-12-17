@@ -1,5 +1,6 @@
 package com.hacklodge.seattle.appsampler;
 
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 
 import java.io.File;
@@ -30,5 +31,9 @@ public class AppHolder {
 
     public Uri getApkUri() {
         return apkUri;
+    }
+
+    public Icon getIcon() {
+        return null;
     }
 }

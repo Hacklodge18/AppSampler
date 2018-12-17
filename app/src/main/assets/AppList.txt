@@ -1,0 +1,13 @@
+com.supercell.brawlstars
+com.mochibits.wordtoword.google
+com.lemonjamstudio.infiniteknights
+com.pinestreetcodeworks.TinyBubbles
+com.joycrit.unitedfront
+com.flaregames.superspellheroes
+com.aladinfun.island.android
+com.mobirix.swipebrick2
+com.gamevil.dragonblaze1.android.google.global.normal
+com.buffstudio.myoasis
+com.pixio.google.mtd
+com.nintendo.zaba
+com.pikpok.nsr.play

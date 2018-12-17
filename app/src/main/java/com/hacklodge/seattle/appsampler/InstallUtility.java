@@ -34,13 +34,14 @@ public class InstallUtility {
      * @param c the context this function was called from
      * @param app the information about the app to be installed
      */
-    public static void install(Context c, AppHolder app) {
+    public static void install(Context c, AppHolder app, InstalledAppsManager manager) {
         /*Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(app.getApkUri(), "application/vnd.android.package-archive");
         c.startActivity(intent);*/
         Intent goToMarket = new Intent(Intent.ACTION_VIEW)
                 .setData(Uri.parse("market://details?id=" + app.getPackageName()));
         c.startActivity(goToMarket);
+        manager.addInstalled(app);
     }
 
     /**
@@ -49,12 +50,13 @@ public class InstallUtility {
      * @param c the context this function was called from
      * @param app the information about the app to be uninstalled
      */
-    public static void uninstall(Context c, AppHolder app) {
+    public static void uninstall(Context c, AppHolder app, InstalledAppsManager manager) {
         Intent intent = new Intent(Intent.ACTION_DELETE, Uri.fromParts("package",
                 c.getPackageManager()
                         .getPackageArchiveInfo(app.getApkUri().getPath(), 0)
                         .packageName,null));
         c.startActivity(intent);
+        manager.removeInstalled(app);
     }
 
     /**
