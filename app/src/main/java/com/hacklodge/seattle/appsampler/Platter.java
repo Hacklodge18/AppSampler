@@ -25,6 +25,7 @@ public class Platter extends AppCompatActivity {
     Button cycleB;
     Button uninstallB;
     Handler handler;
+    ArrayList<TextView> appTexts;
     AppHolder[] apps;
     ArrayList<Button> buttons;
 //    AppHolder a1 = new AppHolder("com.supercell.brawlstars","BrawlStar" , null);
@@ -48,6 +49,16 @@ public class Platter extends AppCompatActivity {
         apps[3].loadIcon(appIMG4);
         buttons = new ArrayList<Button>();
         cycleB = (Button) findViewById(R.id.cycleB);
+        appTexts = new  ArrayList<TextView>();
+        TextView appTextView1 = (TextView) findViewById(R.id.appTextView1);
+        TextView appTextView2 = (TextView) findViewById(R.id.appTextView2);
+        TextView appTextView3 = (TextView) findViewById(R.id.appTextView3);
+        TextView appTextView4 = (TextView) findViewById(R.id.appTextView4);
+        appTexts.add(appTextView1);
+        appTexts.add(appTextView2);
+        appTexts.add(appTextView3);
+        appTexts.add(appTextView4);
+//        cycleB.getI
 //        Picasso.get().load(Uri.parse()).into(imageView);
         appB1 = (Button) findViewById(R.id.app1);
         appB2 = (Button) findViewById(R.id.app2);
@@ -59,6 +70,7 @@ public class Platter extends AppCompatActivity {
         buttons.add(appB3);
         buttons.add(appB4);
         for (int i = 0; i < apps.length; i++) {
+            appTexts.get(i).setText(apps[i].getAppName());
             if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
                 buttons.get(i).setText("Install");
             } else {
@@ -70,7 +82,6 @@ public class Platter extends AppCompatActivity {
             buttons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (Manager.isInstalled(view.getContext(), apps[index]) == false) {
                         InstallUtility.install(view.getContext(), apps[index], Manager);
                     } else {
@@ -82,7 +93,10 @@ public class Platter extends AppCompatActivity {
         uninstallB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.shouldBeUninstalled();
+                List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
+                for(int i = 0; i < appsToUninstall.size(); i++){
+                    InstallUtility.uninstall(view.getContext(),appsToUninstall.get(i), Manager);
+                }
             }
         });
         cycleB.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +112,7 @@ public class Platter extends AppCompatActivity {
                 ImageView appIMG4 = (ImageView) findViewById(R.id.appIMG4);
                 apps[3].loadIcon(appIMG4);
                 for(int i = 0; i < apps.length ;i++) {
+                    appTexts.get(i).setText(apps[i].getAppName());
                     if (Manager.isInstalled(view.getContext(), apps[i]) == false) {
                         buttons.get(i).setText("Install");
                     } else {
@@ -111,6 +126,7 @@ public class Platter extends AppCompatActivity {
         public void onResume(){
             super.onResume();
             for(int i = 0; i < apps.length ;i++) {
+                appTexts.get(i).setText(apps[i].getAppName());
                 if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
                     buttons.get(i).setText("Install");
                 } else {
