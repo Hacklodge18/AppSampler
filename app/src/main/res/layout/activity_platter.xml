@@ -20,6 +20,18 @@
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <ImageView
+        android:id="@+id/appIMG4"
+        android:layout_width="84dp"
+        android:layout_height="87dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.846"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.639"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <ImageView
         android:id="@+id/appIMG1"
         android:layout_width="87dp"
         android:layout_height="87dp"
@@ -103,18 +115,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.347" />
 
-    <ImageView
-        android:id="@+id/appIMG4"
-        android:layout_width="87dp"
-        android:layout_height="87dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.855"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.639"
-        app:srcCompat="@drawable/ic_launcher_background" />
-
     <Button
         android:id="@+id/cycleB"
         android:layout_width="61dp"
@@ -132,6 +132,7 @@
         android:layout_height="56dp"
         android:singleLine="false"
         android:text="TextView"
+        android:maxLines="3"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.219"
@@ -146,6 +147,7 @@
         android:layout_height="61dp"
         android:singleLine="false"
         android:text="TextView"
+        android:maxLines="3"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.215"
@@ -160,6 +162,7 @@
         android:layout_height="61dp"
         android:singleLine="false"
         android:text="TextView"
+        android:maxLines="3"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.843"
@@ -174,6 +177,7 @@
         android:layout_height="55dp"
         android:singleLine="false"
         android:text="TextView"
+        android:maxLines="3"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.843"
