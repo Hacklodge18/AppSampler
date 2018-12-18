@@ -19,6 +19,7 @@ public class Platter extends AppCompatActivity {
     Button appB3;
     Button appB4;
     AppHolder[] apps;
+    ArrayList<Button> buttons;
 //    AppHolder a1 = new AppHolder("com.supercell.brawlstars","BrawlStar" , null);
 //    AppHolder a3 = new AppHolder("com.lemonjamstudio.infiniteknights","InfiniteKnight" , null);
 //    AppHolder a2 = new AppHolder("com.mochibits.wordtoword.google","wordtoword" , null);
@@ -31,30 +32,35 @@ public class Platter extends AppCompatActivity {
         apps = Manager.getPlatter();
         ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
         apps[0].loadIcon(appIMG1);
-        ArrayList<Button> buttons= new ArrayList<Button>();
-        appB1 = (Button)findViewById(R.id.app1);
-        appB2 = (Button)findViewById(R.id.app2);
-        appB3 = (Button)findViewById(R.id.app3);
-        appB4 = (Button)findViewById(R.id.app4);
+        ImageView appIMG2 = (ImageView) findViewById(R.id.appIMG2);
+        apps[1].loadIcon(appIMG2);
+        ImageView appIMG3 = (ImageView) findViewById(R.id.appIMG3);
+        apps[2].loadIcon(appIMG3);
+        ImageView appIMG4 = (ImageView) findViewById(R.id.appIMG4);
+        apps[3].loadIcon(appIMG4);
+        buttons = new ArrayList<Button>();
+        appB1 = (Button) findViewById(R.id.app1);
+        appB2 = (Button) findViewById(R.id.app2);
+        appB3 = (Button) findViewById(R.id.app3);
+        appB4 = (Button) findViewById(R.id.app4);
         buttons.add(appB1);
         buttons.add(appB2);
         buttons.add(appB3);
         buttons.add(appB4);
-        for(int i = 0; i < apps.length; i++) {
-            if (Manager.isInstalled( this.getApplicationContext(),apps[i]) == false) {
+        for (int i = 0; i < apps.length; i++) {
+            if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
                 buttons.get(i).setText("Install");
             } else {
-                buttons.get(i).setText("Play");
+                appB1.setText("Play");
             }
         }
         appB1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(Manager.isInstalled(view.getContext(), apps[0]) == false) {
-                    InstallUtility.install(view.getContext() , apps[0], Manager);
-                    appB1.setText("Play");
-                }else {
+                if (Manager.isInstalled(view.getContext(), apps[0]) == false) {
+                    InstallUtility.install(view.getContext(), apps[0], Manager);
+                } else {
                     InstallUtility.launch(view.getContext(), apps[0]);
                 }
             }
@@ -62,10 +68,9 @@ public class Platter extends AppCompatActivity {
         appB2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Manager.isInstalled(view.getContext(),apps[1]) == false) {
+                if (Manager.isInstalled(view.getContext(), apps[1]) == false) {
                     InstallUtility.install(view.getContext(), apps[1], Manager);
-                    appB2.setText("Play");
-                }else{
+                } else {
 
                 }
             }
@@ -73,10 +78,9 @@ public class Platter extends AppCompatActivity {
         appB3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Manager.isInstalled(view.getContext(),apps[2]) == false) {
+                if (Manager.isInstalled(view.getContext(), apps[2]) == false) {
                     InstallUtility.install(view.getContext(), apps[2], Manager);
-                    appB3.setText("Play");
-                }else{
+                } else {
 
                 }
             }
@@ -84,13 +88,24 @@ public class Platter extends AppCompatActivity {
         appB4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Manager.isInstalled(view.getContext(),apps[3]) == false) {
+                if (Manager.isInstalled(view.getContext(), apps[3]) == false) {
                     InstallUtility.install(view.getContext(), apps[4], Manager);
-                    appB4.setText("Play");
-                }else{
+                } else {
 
                 }
             }
         });
     }
+        public void onResume(){
+            super.onResume();
+            for(int i = 0; i < apps.length ;i++) {
+                if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
+                    buttons.get(i).setText("Install");
+                } else {
+                    buttons.get(i).setText("Play");
+                }
+            }
+        }
+
+
 }

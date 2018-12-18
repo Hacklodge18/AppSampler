@@ -45,7 +45,11 @@ public class InstalledAppsManager {
     }
 
     public boolean isInstalled(Context c, AppHolder app) {
-        return installedPrograms.contains(app) && ensureInstalled(c, app.getPackageName());
+        boolean checker = ensureInstalled(c, app.getPackageName());
+        if(checker == true){
+            installedPrograms.add(app).
+        }
+        return checker;
     }
 
     public List<AppHolder> shouldBeUninstalled() {
