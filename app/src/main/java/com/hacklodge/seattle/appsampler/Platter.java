@@ -18,6 +18,7 @@ public class Platter extends AppCompatActivity {
     Button appB2;
     Button appB3;
     Button appB4;
+    Button uninstallB;
     AppHolder[] apps;
     ArrayList<Button> buttons;
 //    AppHolder a1 = new AppHolder("com.supercell.brawlstars","BrawlStar" , null);
@@ -43,6 +44,7 @@ public class Platter extends AppCompatActivity {
         appB2 = (Button) findViewById(R.id.app2);
         appB3 = (Button) findViewById(R.id.app3);
         appB4 = (Button) findViewById(R.id.app4);
+        uninstallB = (Button) findViewById(R.id.uninstall);
         buttons.add(appB1);
         buttons.add(appB2);
         buttons.add(appB3);
@@ -95,6 +97,13 @@ public class Platter extends AppCompatActivity {
                 }
             }
         });
+        uninstallB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
+
     }
         public void onResume(){
             super.onResume();
