@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import java.util.*;
 import android.widget.ImageView;
+import android.widget.ImageButton;
 
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +50,6 @@ public class Platter extends AppCompatActivity {
         ImageView appIMG4 = (ImageView) findViewById(R.id.appIMG4);
         apps[3].loadIcon(appIMG4);
         buttons = new ArrayList<Button>();
-        cycleB = (Button) findViewById(R.id.cycleB);
         appTexts = new  ArrayList<TextView>();
         TextView appTextView1 = (TextView) findViewById(R.id.appTextView1);
         TextView appTextView2 = (TextView) findViewById(R.id.appTextView2);
@@ -59,8 +59,9 @@ public class Platter extends AppCompatActivity {
         appTexts.add(appTextView2);
         appTexts.add(appTextView3);
         appTexts.add(appTextView4);
-//        cycleB.getI
-//        Picasso.get().load(Uri.parse()).into(imageView);
+        ImageButton cycleB = (ImageButton) findViewById(R.id.cycleB);
+        ImageView cycleP = (ImageView) findViewById(R.id.cycleP);
+        Picasso.get().load(R.drawable.cycle).into(cycleP);
         appB1 = (Button) findViewById(R.id.app1);
         appB2 = (Button) findViewById(R.id.app2);
         appB3 = (Button) findViewById(R.id.app3);
