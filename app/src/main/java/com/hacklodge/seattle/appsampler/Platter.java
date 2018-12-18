@@ -37,7 +37,7 @@ public class Platter extends AppCompatActivity {
         setContentView(R.layout.activity_platter);
 //        handler = new Handler();
         Manager = new InstalledAppsManager(this.getApplicationContext());
-        apps = Manager.cycle(this.getApplicationContext());
+        apps = Manager.getPlatter();
         ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
         apps[0].loadIcon(appIMG1);
         ImageView appIMG2 = (ImageView) findViewById(R.id.appIMG2);

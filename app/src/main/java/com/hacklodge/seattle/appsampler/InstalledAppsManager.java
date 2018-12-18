@@ -8,9 +8,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,9 +26,9 @@ import java.util.Set;
 
 public class InstalledAppsManager {
 
-    private static final String INSTALL_LIST_FILENAME = "INSTALLED_APPS_LIST";
+    private static final String INSTALL_LIST_FILENAME = "INSTALLED_APPS_LIST.json";
 
-    private static final String PLATTER_FILENAME = "PLATTER_SAVE_DATA";
+    private static final String PLATTER_FILENAME = "PLATTER_SAVE_DATA.json";
 
     private Set<AppHolder> installedPrograms;
 
@@ -35,6 +37,7 @@ public class InstalledAppsManager {
     public InstalledAppsManager(Context c) {
         loadInstalled(c);
         loadPlatter(c);
+        savePlatter(c);
     }
 
     public void addInstalled(Context c, AppHolder app) {
@@ -82,13 +85,18 @@ public class InstalledAppsManager {
             byte[] content = Files.readAllBytes(installList.toPath());
             String decodedContent = new String(content);
             AppHolder[] arr = loadFromJSON(decodedContent);
+            if (arr == null) return;
             for (AppHolder app : arr) {
                 if (! installedPrograms.contains(app) && ensureInstalled(c, app.getPackageName())) {
                     installedPrograms.add(app);
                 }
             }
         } catch(IOException e) {
-            installList.mkdir();
+            try {
+                installList.createNewFile();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
         }
     }
 
@@ -99,13 +107,18 @@ public class InstalledAppsManager {
             byte[] content = Files.readAllBytes(platterList.toPath());
             String decodedContent = new String(content);
             AppHolder[] arr = loadFromJSON(decodedContent);
+            if (arr == null) return;
 
             for (int i = 0; i < arr.length; i++) {
                 if (i >= platter.length) break;
                 platter[i] = arr[i];
             }
         } catch(IOException e) {
-            platterList.mkdir();
+            try {
+                platterList.createNewFile();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
             cycle(c);
         }
     }
@@ -142,13 +155,19 @@ public class InstalledAppsManager {
             array.put(obj);
         }
 
+        File dir = c.getFilesDir();
+        File file = new File(dir, filename);
         try {
-            FileOutputStream stream =  c.openFileOutput(filename, Context.MODE_PRIVATE);
-            stream.write(array.toString().getBytes());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            output.write(array.toString());
+            output.close();
         } catch (IOException e) {
             e.printStackTrace();
+            try {
+                file.createNewFile();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
         }
     }
 
