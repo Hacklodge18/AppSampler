@@ -1,5 +1,6 @@
 package com.hacklodge.seattle.appsampler;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -73,8 +74,10 @@ public class Platter extends AppCompatActivity {
             appTexts.get(i).setText(apps[i].getAppName());
             if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
                 buttons.get(i).setText("Install");
+                buttons.get(i).setBackgroundColor(Color.CYAN);
             } else {
                 appB1.setText("Play");
+                buttons.get(i).setBackgroundColor(Color.GREEN);
             }
         }
         for(int i = 0; i < apps.length; i++){
@@ -106,8 +109,10 @@ public class Platter extends AppCompatActivity {
                     appTexts.get(i).setText(apps[i].getAppName());
                     if (Manager.isInstalled(view.getContext(), apps[i]) == false) {
                         buttons.get(i).setText("Install");
+                        buttons.get(i).setBackgroundColor(Color.CYAN);
                     } else {
-                        buttons.get(i).setText("Play");
+                        appB1.setText("Play");
+                        buttons.get(i).setBackgroundColor(Color.GREEN);
                     }
                 }
 
@@ -125,8 +130,10 @@ public class Platter extends AppCompatActivity {
                 appTexts.get(i).setText(apps[i].getAppName());
                 if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
                     buttons.get(i).setText("Install");
+                    buttons.get(i).setBackgroundColor(Color.CYAN);
                 } else {
-                    buttons.get(i).setText("Play");
+                    appB1.setText("Play");
+                    buttons.get(i).setBackgroundColor(Color.GREEN);
                 }
             }
         }
