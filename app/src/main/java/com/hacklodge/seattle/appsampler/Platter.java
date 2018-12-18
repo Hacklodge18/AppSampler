@@ -65,47 +65,20 @@ public class Platter extends AppCompatActivity {
                 appB1.setText("Play");
             }
         }
-        appB1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        for(int i = 0; i < apps.length; i++){
+            final int index = i;
+            buttons.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                if (Manager.isInstalled(view.getContext(), apps[0]) == false) {
-                    InstallUtility.install(view.getContext(), apps[0], Manager);
-                } else {
-                    InstallUtility.launch(view.getContext(), apps[0]);
+                    if (Manager.isInstalled(view.getContext(), apps[index]) == false) {
+                        InstallUtility.install(view.getContext(), apps[index], Manager);
+                    } else {
+                        InstallUtility.launch(view.getContext(), apps[index]);
+                    }
                 }
-            }
-        });
-        appB2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Manager.isInstalled(view.getContext(), apps[1]) == false) {
-                    InstallUtility.install(view.getContext(), apps[1], Manager);
-                } else {
-
-                }
-            }
-        });
-        appB3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Manager.isInstalled(view.getContext(), apps[2]) == false) {
-                    InstallUtility.install(view.getContext(), apps[2], Manager);
-                } else {
-
-                }
-            }
-        });
-        appB4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Manager.isInstalled(view.getContext(), apps[3]) == false) {
-                    InstallUtility.install(view.getContext(), apps[3], Manager);
-                } else {
-
-                }
-            }
-        });
+            });
+        }
         uninstallB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
