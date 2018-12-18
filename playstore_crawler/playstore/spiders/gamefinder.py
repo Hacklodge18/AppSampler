@@ -10,7 +10,7 @@ class GamefinderSpider(scrapy.Spider):
     def parse(self, response):
         
         genre = response.css("a.hrTbp.R8zArc::text")[1].extract()
-        accepted_genres = {'Action', 'Adventure', 'Arcade', 'Board', 'Card', 'Casual', 'Music', 'Puzzle', 'Racing', 'Role Playing', 'Simulation', 'Sports', 'Strategy', 'Trivia', 'Word'}
+        accepted_genres = {'Action', 'Adventure', 'Arcade', 'Board', 'Card', 'Casual', 'Music', 'Puzzle', 'Racing', 'Role Playing', 'Simulation', 'Strategy', 'Trivia', 'Word'}
         if genre not in accepted_genres:
             return
 
