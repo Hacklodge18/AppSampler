@@ -34,6 +34,7 @@ public class Platter extends AppCompatActivity {
 //    AppHolder a4 = new AppHolder("om.pinestreetcodeworks.TinyBubbles","TinnyBubbles" , null);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_platter);
 //        handler = new Handler();
