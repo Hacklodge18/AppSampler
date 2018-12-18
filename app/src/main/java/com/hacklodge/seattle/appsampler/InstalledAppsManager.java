@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,31 +26,36 @@ public class InstalledAppsManager {
 
     private static final String INSTALL_LIST_FILENAME = "INSTALLED_APPS_LIST";
 
+    private static final String PLATTER_FILENAME = "PLATTER_SAVE_DATA";
+
     private Set<AppHolder> installedPrograms;
 
     private AppHolder[] platter = new AppHolder[4];
 
     public InstalledAppsManager(Context c) {
         loadInstalled(c);
-        checkForUpdates(c);
+        loadPlatter(c);
     }
 
     public void addInstalled(Context c, AppHolder app) {
         if (ensureInstalled(c, app.getPackageName())) {
             installedPrograms.add(app);
+            saveCurrentInstalled(c);
         }
     }
 
     public void removeInstalled(Context c, AppHolder app) {
         if (!ensureInstalled(c, app.getPackageName())) {
             installedPrograms.remove(app);
+            saveCurrentInstalled(c);
         }
     }
 
     public boolean isInstalled(Context c, AppHolder app) {
         boolean checker = ensureInstalled(c, app.getPackageName());
-        if(checker == true){
+        if(checker){
             installedPrograms.add(app);
+            saveCurrentInstalled(c);
         }
         return checker;
     }
@@ -71,17 +77,36 @@ public class InstalledAppsManager {
         installedPrograms = new HashSet<>();
         File dir = c.getFilesDir();
         File installList = new File(dir, INSTALL_LIST_FILENAME);
+
         try {
             byte[] content = Files.readAllBytes(installList.toPath());
             String decodedContent = new String(content);
-            String[] parsed = decodedContent.split("\n");
-            for (String s : parsed) {
-                if (! installedPrograms.contains(s) && ensureInstalled(c, s)) {
-                    installedPrograms.add(new AppHolder(s, s, null));
+            AppHolder[] arr = loadFromJSON(decodedContent);
+            for (AppHolder app : arr) {
+                if (! installedPrograms.contains(app) && ensureInstalled(c, app.getPackageName())) {
+                    installedPrograms.add(app);
                 }
             }
         } catch(IOException e) {
             installList.mkdir();
+        }
+    }
+
+    private void loadPlatter(Context c) {
+        File dir = c.getFilesDir();
+        File platterList = new File(dir, PLATTER_FILENAME);
+        try {
+            byte[] content = Files.readAllBytes(platterList.toPath());
+            String decodedContent = new String(content);
+            AppHolder[] arr = loadFromJSON(decodedContent);
+
+            for (int i = 0; i < arr.length; i++) {
+                if (i >= platter.length) break;
+                platter[i] = arr[i];
+            }
+        } catch(IOException e) {
+            platterList.mkdir();
+            cycle(c);
         }
     }
 
@@ -97,22 +122,60 @@ public class InstalledAppsManager {
         return found;
     }
 
-    private void saveCurrentInstalled(Context c) {
-        String content = "";
-        for (AppHolder app : installedPrograms) {
-            content += app.getPackageName() + "\n";
+    public void saveCurrentInstalled(Context c) {
+        saveAppHolders(c, installedPrograms.toArray(new AppHolder[0]), INSTALL_LIST_FILENAME);
+    }
+
+    public void savePlatter(Context c) {
+        saveAppHolders(c, platter, PLATTER_FILENAME);
+    }
+
+    private void saveAppHolders(Context c, AppHolder[] apps, String filename) {
+        JSONArray array = new JSONArray();
+        for (AppHolder app : apps) {
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("name", app.getAppName());
+                obj.put("package", app.getPackageName());
+                obj.put("icon", app.getIcon());
+            } catch (JSONException e) {continue;}
+            array.put(obj);
         }
+
         try {
-            FileOutputStream stream =  c.openFileOutput(INSTALL_LIST_FILENAME, Context.MODE_PRIVATE);
-        } catch (Exception e) {
+            FileOutputStream stream =  c.openFileOutput(filename, Context.MODE_PRIVATE);
+            stream.write(array.toString().getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
+     * Updates the current platter with new, randomly selected games.
+     * @param c the context this function was called from
+     * @return the current platter
+     */
+    public AppHolder[] cycle(Context c) {
+        AppHolder[] allApps = loadAppList(c);
+        if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LAOD");
+
+        for (int i = 0; i < platter.length; i++) {
+            int randIndex = (int) (Math.random()*allApps.length);
+            platter[i] = allApps[randIndex];
+        }
+
+        savePlatter(c);
+        return getPlatter();
+    }
+
+    /**
+     * @deprecated Use the cycle(c) command to instantly cycle platter
      * Checks the server for any updates to the platter. If updates are found, propagates them.
      * @return true if updates are found
      */
+    @Deprecated
     public boolean checkForUpdates(Context c) {
         AppHolder[] allApps = loadAppList(c);
         if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LAOD");
@@ -134,19 +197,30 @@ public class InstalledAppsManager {
     }
 
     private AppHolder[] loadAppList(Context c) {
+        try {
+            String json = loadJSONFile(c.getAssets().open("AppList.json"));
+            return loadFromJSON(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String loadJSONFile(InputStream file) {
         String json = null;
         try {
-            InputStream is = c.getAssets().open("AppList.json");
-            int size = is.available();
+            int size = file.available();
             byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
+            file.read(buffer);
+            file.close();
+            return new String(buffer, "UTF-8");
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
         }
+    }
 
+    private AppHolder[] loadFromJSON(String json) {
         try {
             JSONArray array = new JSONArray(json);
             AppHolder[] appArray = new AppHolder[array.length()];

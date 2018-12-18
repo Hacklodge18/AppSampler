@@ -29,6 +29,10 @@ public class AppHolder {
         return appName;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
     public void loadIcon(ImageView imageView) {
         Picasso.get().load(Uri.parse(icon)).into(imageView);
     }
