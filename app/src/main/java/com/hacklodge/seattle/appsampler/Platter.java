@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -138,5 +140,40 @@ public class Platter extends AppCompatActivity {
             }
         }
 
+    private void animate(final View viewToAnim, final Callback callback) {
+        final ScaleAnimation grow = new ScaleAnimation(0f, 1f, 0f, 1f);
+        final ScaleAnimation shrink = new ScaleAnimation(1f, 0f, 1f, 0f);
 
+        grow.setDuration(500);
+        shrink.setDuration(500);
+
+        shrink.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                callback.function();
+                viewToAnim.setAnimation(grow);
+                grow.start();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        viewToAnim.setAnimation(shrink);
+        shrink.start();
+    }
+
+    /**
+     * callback class for animation that will be called mid-animation
+     */
+    private abstract class Callback {
+        public abstract void function();
+    }
 }
