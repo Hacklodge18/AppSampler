@@ -100,7 +100,7 @@ public class Platter extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (Manager.isInstalled(view.getContext(), apps[3]) == false) {
-                    InstallUtility.install(view.getContext(), apps[4], Manager);
+                    InstallUtility.install(view.getContext(), apps[3], Manager);
                 } else {
 
                 }
