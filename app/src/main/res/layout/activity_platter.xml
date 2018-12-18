@@ -119,7 +119,6 @@
         android:id="@+id/cycleB"
         android:layout_width="61dp"
         android:layout_height="61dp"
-        android:background="@drawable/arrow-31177_960_720"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 

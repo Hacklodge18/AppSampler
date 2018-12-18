@@ -37,7 +37,7 @@ public class Platter extends AppCompatActivity {
         setContentView(R.layout.activity_platter);
 //        handler = new Handler();
         Manager = new InstalledAppsManager(this.getApplicationContext());
-        apps = Manager.getPlatter();
+        apps = Manager.cycle(this.getApplicationContext());
         ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
         apps[0].loadIcon(appIMG1);
         ImageView appIMG2 = (ImageView) findViewById(R.id.appIMG2);
@@ -48,8 +48,7 @@ public class Platter extends AppCompatActivity {
         apps[3].loadIcon(appIMG4);
         buttons = new ArrayList<Button>();
         cycleB = (Button) findViewById(R.id.cycleB);
-
-        Picasso.get().load(Uri.parse()).into(imageView);
+//        Picasso.get().load(Uri.parse()).into(imageView);
         appB1 = (Button) findViewById(R.id.app1);
         appB2 = (Button) findViewById(R.id.app2);
         appB3 = (Button) findViewById(R.id.app3);
@@ -116,7 +115,22 @@ public class Platter extends AppCompatActivity {
         cycleB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                apps = Manager.cycle(view.getContext());
+                ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
+                apps[0].loadIcon(appIMG1);
+                ImageView appIMG2 = (ImageView) findViewById(R.id.appIMG2);
+                apps[1].loadIcon(appIMG2);
+                ImageView appIMG3 = (ImageView) findViewById(R.id.appIMG3);
+                apps[2].loadIcon(appIMG3);
+                ImageView appIMG4 = (ImageView) findViewById(R.id.appIMG4);
+                apps[3].loadIcon(appIMG4);
+                for(int i = 0; i < apps.length ;i++) {
+                    if (Manager.isInstalled(view.getContext(), apps[i]) == false) {
+                        buttons.get(i).setText("Install");
+                    } else {
+                        buttons.get(i).setText("Play");
+                    }
+                }
             }
         });
 
