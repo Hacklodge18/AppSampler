@@ -100,7 +100,7 @@ public class Platter extends AppCompatActivity {
         uninstallB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
 

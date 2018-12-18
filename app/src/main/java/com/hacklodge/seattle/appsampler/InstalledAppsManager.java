@@ -49,11 +49,7 @@ public class InstalledAppsManager {
     public boolean isInstalled(Context c, AppHolder app) {
         boolean checker = ensureInstalled(c, app.getPackageName());
         if(checker == true){
-<<<<<<< HEAD
-            installedPrograms.add(app); 
-=======
             installedPrograms.add(app);
->>>>>>> 631fbad690685bee0c3cbceee95888b0148b18cf
         }
         return checker;
     }
