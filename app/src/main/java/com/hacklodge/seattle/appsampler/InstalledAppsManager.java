@@ -17,13 +17,15 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class InstalledAppsManager {
 
     private static final String INSTALL_LIST_FILENAME = "INSTALLED_APPS_LIST";
 
-    private List<AppHolder> installedPrograms;
+    private Set<AppHolder> installedPrograms;
 
     private AppHolder[] platter = new AppHolder[4];
 
@@ -47,7 +49,7 @@ public class InstalledAppsManager {
     public boolean isInstalled(Context c, AppHolder app) {
         boolean checker = ensureInstalled(c, app.getPackageName());
         if(checker == true){
-            installedPrograms.add(app).
+            installedPrograms.add(app);
         }
         return checker;
     }
@@ -66,7 +68,7 @@ public class InstalledAppsManager {
     }
 
     private void loadInstalled(Context c) {
-        installedPrograms = new ArrayList<AppHolder>();
+        installedPrograms = new HashSet<>();
         File dir = c.getFilesDir();
         File installList = new File(dir, INSTALL_LIST_FILENAME);
         try {
