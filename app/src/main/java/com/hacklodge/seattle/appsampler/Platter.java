@@ -97,13 +97,7 @@ public class Platter extends AppCompatActivity {
         buttons.add(appB4);
         for (int i = 0; i < apps.length; i++) {
             appTexts.get(i).setText(apps[i].getAppName());
-            if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
-                buttons.get(i).setText("Install");
-                buttons.get(i).setBackgroundColor(Color.CYAN);
-            } else {
-                appB1.setText("Play");
-                buttons.get(i).setBackgroundColor(Color.GREEN);
-            }
+            updateButton(i);
         }
         for(int i = 0; i < apps.length; i++){
             final int index = i;
@@ -122,23 +116,25 @@ public class Platter extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 apps = Manager.cycle(view.getContext());
-                ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
-                apps[0].loadIcon(appIMG1);
-                ImageView appIMG2 = (ImageView) findViewById(R.id.appIMG2);
-                apps[1].loadIcon(appIMG2);
-                ImageView appIMG3 = (ImageView) findViewById(R.id.appIMG3);
-                apps[2].loadIcon(appIMG3);
-                ImageView appIMG4 = (ImageView) findViewById(R.id.appIMG4);
-                apps[3].loadIcon(appIMG4);
+                final ImageView[] views = new ImageView[4];
+                views[0] = (ImageView) findViewById(R.id.appIMG1);
+                views[1] = (ImageView) findViewById(R.id.appIMG2);
+                views[2] = (ImageView) findViewById(R.id.appIMG3);
+                views[3] = (ImageView) findViewById(R.id.appIMG4);
+                final View[] containers = {findViewById(R.id.element1),findViewById(R.id.element2),
+                        findViewById(R.id.element3),findViewById(R.id.element4)};
+
                 for(int i = 0; i < apps.length ;i++) {
-                    appTexts.get(i).setText(apps[i].getAppName());
-                    if (Manager.isInstalled(view.getContext(), apps[i]) == false) {
-                        buttons.get(i).setText("Install");
-                        buttons.get(i).setBackgroundColor(Color.CYAN);
-                    } else {
-                        appB1.setText("Play");
-                        buttons.get(i).setBackgroundColor(Color.GREEN);
-                    }
+                    final int index = i;
+                    apps[index].loadIcon(views[index]);
+                    updateButton(index);
+                    /*animate(containers[index], new Callback() {
+                        @Override
+                        public void function() {
+                            apps[index].loadIcon(views[index]);
+                            updateButton(index);
+                        }
+                    });*/
                 }
 
                 List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
@@ -149,23 +145,27 @@ public class Platter extends AppCompatActivity {
         });
 
     }
-        public void onResume(){
-            super.onResume();
-            for(int i = 0; i < apps.length ;i++) {
-                appTexts.get(i).setText(apps[i].getAppName());
-                if (Manager.isInstalled(this.getApplicationContext(), apps[i]) == false) {
-                    buttons.get(i).setText("Install");
-                    buttons.get(i).setBackgroundColor(Color.CYAN);
-                } else {
-                    appB1.setText("Play");
-                    buttons.get(i).setBackgroundColor(Color.GREEN);
-                }
-            }
+    public void onResume(){
+        super.onResume();
+        for(int i = 0; i < apps.length ;i++) {
+            appTexts.get(i).setText(apps[i].getAppName());
+            updateButton(i);
         }
+    }
+
+    private void updateButton(int num) {
+        if (! Manager.isInstalled(this.getApplicationContext(), apps[num])) {
+            buttons.get(num).setText("Install");
+            buttons.get(num).setBackgroundColor(Color.CYAN);
+        } else {
+            appB1.setText("Play");
+            buttons.get(num).setBackgroundColor(Color.GREEN);
+        }
+    }
 
     private void animate(final View viewToAnim, final Callback callback) {
-        final ScaleAnimation grow = new ScaleAnimation(0f, 1f, 0f, 1f);
-        final ScaleAnimation shrink = new ScaleAnimation(1f, 0f, 1f, 0f);
+        final ScaleAnimation grow = new ScaleAnimation(0.5f, 1f, 0.5f, 1f);
+        final ScaleAnimation shrink = new ScaleAnimation(1f, 0.5f, 1f, 0.5f);
 
         grow.setDuration(500);
         shrink.setDuration(500);
@@ -173,7 +173,7 @@ public class Platter extends AppCompatActivity {
         shrink.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
+                System.out.println("animating");
             }
 
             @Override
@@ -190,7 +190,8 @@ public class Platter extends AppCompatActivity {
         });
 
         viewToAnim.setAnimation(shrink);
-        shrink.start();
+        shrink.startNow();
+        viewToAnim.invalidate();
     }
 
     /**

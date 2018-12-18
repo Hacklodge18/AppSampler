@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Element1 xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/uninstall"
@@ -19,7 +19,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.945" />
 
-    <Element1>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/element1">
 
         <ImageView
             android:id="@+id/appIMG1"
@@ -60,9 +63,12 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.072" />
-    </Element1>
+    </android.support.constraint.ConstraintLayout>
 
-    <Element2>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/element2">
 
         <TextView
             android:id="@+id/appTextView2"
@@ -104,9 +110,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.332" />
 
-    </Element2>
+    </android.support.constraint.ConstraintLayout>
 
-    <Element3>
+    <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/element3">
 
         <TextView
             android:id="@+id/appTextView3"
@@ -147,9 +156,12 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.758" />
-    </Element3>
+    </android.support.constraint.ConstraintLayout>
 
-    <Element4>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/element4">
 
         <TextView
             android:id="@+id/appTextView4"
@@ -191,7 +203,7 @@
             app:layout_constraintVertical_bias="0.639"
             app:srcCompat="@drawable/ic_launcher_background" />
 
-    </Element4>
+    </android.support.constraint.ConstraintLayout>
 
 
     <ImageButton
