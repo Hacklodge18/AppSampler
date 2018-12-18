@@ -11,6 +11,10 @@ import android.net.Uri;
 import java.util.*;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.logging.Handler;
+
 
 public class Platter extends AppCompatActivity {
     InstalledAppsManager Manager;
@@ -18,7 +22,9 @@ public class Platter extends AppCompatActivity {
     Button appB2;
     Button appB3;
     Button appB4;
+    Button cycleB;
     Button uninstallB;
+    Handler handler;
     AppHolder[] apps;
     ArrayList<Button> buttons;
 //    AppHolder a1 = new AppHolder("com.supercell.brawlstars","BrawlStar" , null);
@@ -29,6 +35,7 @@ public class Platter extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_platter);
+//        handler = new Handler();
         Manager = new InstalledAppsManager(this.getApplicationContext());
         apps = Manager.getPlatter();
         ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
@@ -40,11 +47,14 @@ public class Platter extends AppCompatActivity {
         ImageView appIMG4 = (ImageView) findViewById(R.id.appIMG4);
         apps[3].loadIcon(appIMG4);
         buttons = new ArrayList<Button>();
+        cycleB = (Button) findViewById(R.id.cycleB);
+
+        Picasso.get().load(Uri.parse()).into(imageView);
         appB1 = (Button) findViewById(R.id.app1);
         appB2 = (Button) findViewById(R.id.app2);
         appB3 = (Button) findViewById(R.id.app3);
         appB4 = (Button) findViewById(R.id.app4);
-        uninstallB = (Button) findViewById(R.id.uninstall);
+        uninstallB = (Button) findViewById(R.id.uninstallB);
         buttons.add(appB1);
         buttons.add(appB2);
         buttons.add(appB3);
@@ -98,6 +108,12 @@ public class Platter extends AppCompatActivity {
             }
         });
         uninstallB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Manager.shouldBeUninstalled();
+            }
+        });
+        cycleB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
