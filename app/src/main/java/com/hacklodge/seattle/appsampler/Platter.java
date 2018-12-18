@@ -24,7 +24,6 @@ public class Platter extends AppCompatActivity {
     Button appB3;
     Button appB4;
     Button cycleB;
-    Button uninstallB;
     Handler handler;
     ArrayList<TextView> appTexts;
     AppHolder[] apps;
@@ -66,7 +65,6 @@ public class Platter extends AppCompatActivity {
         appB2 = (Button) findViewById(R.id.app2);
         appB3 = (Button) findViewById(R.id.app3);
         appB4 = (Button) findViewById(R.id.app4);
-        uninstallB = (Button) findViewById(R.id.uninstallB);
         buttons.add(appB1);
         buttons.add(appB2);
         buttons.add(appB3);
@@ -92,15 +90,6 @@ public class Platter extends AppCompatActivity {
                 }
             });
         }
-        uninstallB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
-                for(int i = 0; i < appsToUninstall.size(); i++){
-                    InstallUtility.uninstall(view.getContext(),appsToUninstall.get(i), Manager);
-                }
-            }
-        });
         cycleB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +109,11 @@ public class Platter extends AppCompatActivity {
                     } else {
                         buttons.get(i).setText("Play");
                     }
+                }
+
+                List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
+                for(int i = 0; i < appsToUninstall.size(); i++){
+                    InstallUtility.uninstall(view.getContext(),appsToUninstall.get(i), Manager);
                 }
             }
         });
