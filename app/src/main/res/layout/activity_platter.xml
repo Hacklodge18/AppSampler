@@ -91,7 +91,7 @@
         app:layout_constraintVertical_bias="0.241" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/appIMG4"
         android:layout_width="87dp"
         android:layout_height="87dp"
         app:layout_constraintBottom_toBottomOf="parent"
