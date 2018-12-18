@@ -109,9 +109,9 @@ public class InstalledAppsManager {
      */
     public boolean checkForUpdates(Context c) {
         AppHolder[] allApps = loadAppList(c);
-        if (allApps == null) return false;
+        if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LAOD");
 
-        int platterIndex = findPlatterIndex();
+        int platterIndex = 0;//findPlatterIndex();
         if (platterIndex < 0 || platterIndex >= allApps.length - 4) {
             return false;
         }
