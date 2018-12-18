@@ -55,6 +55,29 @@ public class Platter extends AppCompatActivity {
         TextView appTextView2 = (TextView) findViewById(R.id.appTextView2);
         TextView appTextView3 = (TextView) findViewById(R.id.appTextView3);
         TextView appTextView4 = (TextView) findViewById(R.id.appTextView4);
+//        TextView tester = (TextView) findViewById(R.id.tester);
+//        tester.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                String line = "                          ";
+//                TextView tester = (TextView) findViewById(R.id.tester);
+//                String TextHolder = (String) tester.getText();
+//                int lineCount = tester.getLineCount();
+//                TextView tester2 = (TextView) findViewById(R.id.tester2);
+//                int number = 0;
+//                tester2.setText(lineCount+"");
+//                for(int i = 3-lineCount; i > 0; i--){
+//                    String Holder = (String)tester.getText();
+//                    Holder = "\n"+Holder;
+//                    tester.setText(Holder);
+//                    number++;
+//
+//                }
+//                tester2.setText(number+"");
+//
+//                // Use lineCount here
+//            }
+//        });
         appTexts.add(appTextView1);
         appTexts.add(appTextView2);
         appTexts.add(appTextView3);
