@@ -45,16 +45,16 @@ public class InstallUtility {
         /*Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(app.getApkUri(), "application/vnd.android.package-archive");
         c.startActivity(intent);*/
-//        Intent goToMarket = new Intent(Intent.ACTION_VIEW)
-//                .setData(Uri.parse("market://details?id=" + app.getPackageName()));
-//        c.startActivity(goToMarket);
-//
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW)
+                .setData(Uri.parse("market://details?id=" + app.getPackageName()));
+        c.startActivity(goToMarket);
 
-        Intent browserIntent = new Intent(c, Browser.class);
-        Bundle b = new Bundle();
-        b.putString("package", app.getPackageName());
-        browserIntent.putExtras(b);
-        c.startActivity(browserIntent);
+
+//        Intent browserIntent = new Intent(c, Browser.class);
+//        Bundle b = new Bundle();
+//        b.putString("package", app.getPackageName());
+//        browserIntent.putExtras(b);
+//        c.startActivity(browserIntent);
 
         manager.addInstalled(c, app);
     }
