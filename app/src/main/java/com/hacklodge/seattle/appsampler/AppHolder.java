@@ -14,6 +14,7 @@ public class AppHolder {
     private String packageName;
     private String appName;
     private String icon;
+    private boolean installed = false;
 
     public AppHolder(String packageName, String appName, String icon) {
         this.packageName = packageName;
@@ -33,6 +34,8 @@ public class AppHolder {
         return icon;
     }
 
+    public boolean getInstalled(){return installed;}
+
     public void loadIcon(ImageView imageView) {
         Picasso.get().load(Uri.parse(icon)).into(imageView);
     }
@@ -45,5 +48,8 @@ public class AppHolder {
 
         AppHolder otherApp = (AppHolder) other;
         return packageName.equals(otherApp.getPackageName());
+    }
+    public void setInstalled(boolean i){
+        installed = i;
     }
 }

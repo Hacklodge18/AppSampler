@@ -1,18 +1,8 @@
 package com.hacklodge.seattle.appsampler;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.support.constraint.Group;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -49,19 +39,10 @@ public class Platter extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.container);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(android.R.drawable.btn_star_big_on);
+        setContentView(R.layout.activity_platter);
 
 //        handler = new Handler();
         Manager = new InstalledAppsManager(this.getApplicationContext());
-
-        updateFavorites();
-
         apps = Manager.getPlatter();
         ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
         apps[0].loadIcon(appIMG1);
@@ -135,7 +116,9 @@ public class Platter extends AppCompatActivity {
                 public void onClick(View view) {
                     if (! Manager.isInstalled(apps[index])) {
                         InstallUtility.install(view.getContext(), apps[index], Manager);
+                        apps[index].setInstalled(false);
                     } else {
+                        apps[index].setInstalled(true);
                         InstallUtility.launch(view.getContext(), apps[index]);
                     }
                 }
@@ -177,7 +160,6 @@ public class Platter extends AppCompatActivity {
         });
 
     }
-
     public void onResume(){
         super.onResume();
         for(int i = 0; i < apps.length ;i++) {
@@ -286,17 +268,6 @@ public class Platter extends AppCompatActivity {
         });
 
         viewToAnim.startAnimation(shrink);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
-                drawer.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
