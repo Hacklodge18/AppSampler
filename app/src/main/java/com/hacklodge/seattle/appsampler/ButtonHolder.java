@@ -1,4 +1,5 @@
 package com.hacklodge.seattle.appsampler;
+import android.content.Context;
 import android.widget.ImageButton;
 public class ButtonHolder {
     private ImageButton b;
@@ -12,8 +13,14 @@ public class ButtonHolder {
     public boolean getOn(){
         return on;
     }
-    public void setOn(boolean a){
+    public void setOn(Context c, boolean a){
         on = a;
+
+        if (on) {
+            getImageButton().setBackground(c.getDrawable(android.R.drawable.btn_star_big_on));
+        } else {
+            getImageButton().setBackground(c.getDrawable(android.R.drawable.btn_star));
+        }
     }
     public ImageButton getImageButton(){
         return b;

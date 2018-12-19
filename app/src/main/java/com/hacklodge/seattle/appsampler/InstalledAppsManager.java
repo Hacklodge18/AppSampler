@@ -40,6 +40,15 @@ public class InstalledAppsManager {
         savePlatter(c);
     }
 
+    public void updateInstalled(Context c, AppHolder app) {
+        if (ensureInstalled(c, app.getPackageName()) && !installedPrograms.contains(app)) {
+            addInstalled(c, app);
+        }
+        if (!ensureInstalled(c, app.getPackageName()) && installedPrograms.contains(app)) {
+            removeInstalled(c, app);
+        }
+    }
+
     public void addInstalled(Context c, AppHolder app) {
         if (ensureInstalled(c, app.getPackageName())) {
             installedPrograms.add(app);
@@ -55,25 +64,18 @@ public class InstalledAppsManager {
     }
 
     public void addFavorite(Context c, AppHolder app) {
-        if (isInstalled(c, app)) {
+        if (isInstalled(app)) {
             favorites.add(app);
-            installedPrograms.remove(app);
             saveCurrentInstalled(c);
             saveFavorites(c);
         }
     }
 
     public void removeFavorite(Context c, AppHolder app) {
-        if (isInstalled(c, app)) {
-            favorites.remove(app);
-            if (inPlatter(app)) {
-                installedPrograms.add(app);
-                saveCurrentInstalled(c);
-            } else {
-                InstallUtility.uninstall(c, app, this);
-            }
-
-            saveFavorites(c);
+        favorites.remove(app);
+        saveFavorites(c);
+        if (isInstalled(app) && !inPlatter(app)) {
+            InstallUtility.uninstall(c, app, this);
         }
     }
 
@@ -81,13 +83,27 @@ public class InstalledAppsManager {
         return favorites.toArray(new AppHolder[0]);
     }
 
-    public boolean isInstalled(Context c, AppHolder app) {
-        boolean checker = ensureInstalled(c, app.getPackageName());
-        if(checker){
-            installedPrograms.add(app);
-            saveCurrentInstalled(c);
+    public boolean isFavorite(AppHolder app) {
+        return favorites.contains(app);
+    }
+
+    public void update(Context c) {
+        for (AppHolder app : installedPrograms) {
+            if (! ensureInstalled(c, app.getPackageName())) {
+                installedPrograms.remove(app);
+                favorites.remove(app);
+            }
         }
-        return checker;
+    }
+
+    /**
+     * Checks to see if the given app is currently installed
+     *
+     * @param app
+     * @return
+     */
+    public boolean isInstalled(AppHolder app) {
+        return installedPrograms.contains(app);
     }
 
     public List<AppHolder> shouldBeUninstalled() {
@@ -106,59 +122,7 @@ public class InstalledAppsManager {
         return apps;
     }
 
-    private void saveFavorites(Context c) {
-        saveAppHolders(c, favorites.toArray(new AppHolder[0]), FAVORITES_FILENAME);
-    }
-
-    private Set<AppHolder> load(Context c, String filename) {
-        Set<AppHolder> result = new HashSet<>();
-        File dir = c.getFilesDir();
-        File installList = new File(dir, filename);
-
-        try {
-            byte[] content = Files.readAllBytes(installList.toPath());
-            String decodedContent = new String(content);
-            AppHolder[] arr = loadFromJSON(decodedContent);
-            if (arr == null) return null;
-            for (AppHolder app : arr) {
-                if (! result.contains(app) && ensureInstalled(c, app.getPackageName())) {
-                    result.add(app);
-                }
-            }
-        } catch(IOException e) {
-            try {
-                installList.createNewFile();
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        }
-        return result;
-    }
-
-    private void loadPlatter(Context c) {
-        File dir = c.getFilesDir();
-        File platterList = new File(dir, PLATTER_FILENAME);
-        try {
-            byte[] content = Files.readAllBytes(platterList.toPath());
-            String decodedContent = new String(content);
-            AppHolder[] arr = loadFromJSON(decodedContent);
-            if (arr == null) return;
-
-            for (int i = 0; i < arr.length; i++) {
-                if (i >= platter.length) break;
-                platter[i] = arr[i];
-            }
-        } catch(IOException e) {
-            try {
-                platterList.createNewFile();
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-            cycle(c);
-        }
-    }
-
-    public boolean ensureInstalled(Context c, String packageName) {
+    private boolean ensureInstalled(Context c, String packageName) {
         boolean found = true;
 
         try {
@@ -168,42 +132,6 @@ public class InstalledAppsManager {
         }
 
         return found;
-    }
-
-    public void saveCurrentInstalled(Context c) {
-        saveAppHolders(c, installedPrograms.toArray(new AppHolder[0]), INSTALL_LIST_FILENAME);
-    }
-
-    public void savePlatter(Context c) {
-        saveAppHolders(c, platter, PLATTER_FILENAME);
-    }
-
-    private void saveAppHolders(Context c, AppHolder[] apps, String filename) {
-        JSONArray array = new JSONArray();
-        for (AppHolder app : apps) {
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put("name", app.getAppName());
-                obj.put("package", app.getPackageName());
-                obj.put("icon", app.getIcon());
-            } catch (JSONException e) {continue;}
-            array.put(obj);
-        }
-
-        File dir = c.getFilesDir();
-        File file = new File(dir, filename);
-        try {
-            BufferedWriter output = new BufferedWriter(new FileWriter(file));
-            output.write(array.toString());
-            output.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            try {
-                file.createNewFile();
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -250,6 +178,86 @@ public class InstalledAppsManager {
         return updated;
     }
 
+    private int findPlatterIndex() {
+        long launchTime = 1545091200;
+        Date date = Calendar.getInstance().getTime();
+        long elapsedTime = date.getTime() - launchTime;
+        return (int) (elapsedTime / 86400000) * 4;
+    }
+
+    public boolean inPlatter(AppHolder app) {
+        for (int i = 0; i < platter.length; i++) {
+            if (app.equals(platter[i])) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the current platter of apps
+     * @return an array representing the current platter of apps
+     */
+    public AppHolder[] getPlatter() {
+        return platter.clone();
+    }
+    public boolean inInstalledProgram(AppHolder a){
+        return installedPrograms.contains(a);
+    }
+
+    // SAVE AND LOAD FUNCTIONS BELOW THIS POINT
+    //=======================================================================================================
+
+    private void saveFavorites(Context c) {
+        saveAppHolders(c, favorites.toArray(new AppHolder[0]), FAVORITES_FILENAME);
+    }
+
+    private Set<AppHolder> load(Context c, String filename) {
+        Set<AppHolder> result = new HashSet<>();
+        File dir = c.getFilesDir();
+        File installList = new File(dir, filename);
+
+        try {
+            byte[] content = Files.readAllBytes(installList.toPath());
+            String decodedContent = new String(content);
+            AppHolder[] arr = loadFromJSON(decodedContent);
+            if (arr == null) return result;
+            for (AppHolder app : arr) {
+                if (! result.contains(app) && ensureInstalled(c, app.getPackageName())) {
+                    result.add(app);
+                }
+            }
+        } catch(IOException e) {
+            try {
+                installList.createNewFile();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    private void loadPlatter(Context c) {
+        File dir = c.getFilesDir();
+        File platterList = new File(dir, PLATTER_FILENAME);
+        try {
+            byte[] content = Files.readAllBytes(platterList.toPath());
+            String decodedContent = new String(content);
+            AppHolder[] arr = loadFromJSON(decodedContent);
+            if (arr == null) return;
+
+            for (int i = 0; i < arr.length; i++) {
+                if (i >= platter.length) break;
+                platter[i] = arr[i];
+            }
+        } catch(IOException e) {
+            try {
+                platterList.createNewFile();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+            cycle(c);
+        }
+    }
+
     private AppHolder[] loadAppList(Context c) {
         try {
             String json = loadJSONFile(c.getAssets().open("AppList.json"));
@@ -294,28 +302,39 @@ public class InstalledAppsManager {
         }
     }
 
-    private int findPlatterIndex() {
-        long launchTime = 1545091200;
-        Date date = Calendar.getInstance().getTime();
-        long elapsedTime = date.getTime() - launchTime;
-        return (int) (elapsedTime / 86400000) * 4;
+    public void saveCurrentInstalled(Context c) {
+        saveAppHolders(c, installedPrograms.toArray(new AppHolder[0]), INSTALL_LIST_FILENAME);
     }
 
-    public boolean inPlatter(AppHolder app) {
-        for (int i = 0; i < platter.length; i++) {
-            if (app.equals(platter[i])) return true;
+    public void savePlatter(Context c) {
+        saveAppHolders(c, platter, PLATTER_FILENAME);
+    }
+
+    private void saveAppHolders(Context c, AppHolder[] apps, String filename) {
+        JSONArray array = new JSONArray();
+        for (AppHolder app : apps) {
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("name", app.getAppName());
+                obj.put("package", app.getPackageName());
+                obj.put("icon", app.getIcon());
+            } catch (JSONException e) {continue;}
+            array.put(obj);
         }
-        return false;
-    }
 
-    /**
-     * Gets the current platter of apps
-     * @return an array representing the current platter of apps
-     */
-    public AppHolder[] getPlatter() {
-        return platter.clone();
-    }
-    public boolean inInstalledProgram(AppHolder a){
-        return installedPrograms.contains(a);
+        File dir = c.getFilesDir();
+        File file = new File(dir, filename);
+        try {
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            output.write(array.toString());
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                file.createNewFile();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
     }
 }
