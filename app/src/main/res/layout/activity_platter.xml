@@ -183,7 +183,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
 
         <ImageButton
             android:id="@+id/cycleB"
@@ -191,16 +192,16 @@
             android:layout_height="60dp"
             android:alpha="0"
             app:srcCompat="@drawable/common_full_open_on_phone"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <ImageView
             android:id="@+id/cycleP"
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:srcCompat="@drawable/common_full_open_on_phone"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>
