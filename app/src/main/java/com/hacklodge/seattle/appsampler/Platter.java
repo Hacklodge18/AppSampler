@@ -126,15 +126,13 @@ public class Platter extends AppCompatActivity {
 
                 for(int i = 0; i < apps.length ;i++) {
                     final int index = i;
-                    apps[index].loadIcon(views[index]);
-                    updateButton(index);
-                    /*animate(containers[index], new Callback() {
+                    animate(containers[index], new Callback() {
                         @Override
                         public void function() {
                             apps[index].loadIcon(views[index]);
                             updateButton(index);
                         }
-                    });*/
+                    });
                 }
 
                 List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
@@ -164,8 +162,8 @@ public class Platter extends AppCompatActivity {
     }
 
     private void animate(final View viewToAnim, final Callback callback) {
-        final ScaleAnimation grow = new ScaleAnimation(0.5f, 1f, 0.5f, 1f);
-        final ScaleAnimation shrink = new ScaleAnimation(1f, 0.5f, 1f, 0.5f);
+        final ScaleAnimation grow = new ScaleAnimation(0f, 1f, 0f, 1f);
+        final ScaleAnimation shrink = new ScaleAnimation(1f, 0f, 1f, 0f);
 
         grow.setDuration(500);
         shrink.setDuration(500);
@@ -173,7 +171,6 @@ public class Platter extends AppCompatActivity {
         shrink.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                System.out.println("animating");
             }
 
             @Override
@@ -189,9 +186,7 @@ public class Platter extends AppCompatActivity {
             }
         });
 
-        viewToAnim.setAnimation(shrink);
-        shrink.startNow();
-        viewToAnim.invalidate();
+        viewToAnim.startAnimation(shrink);
     }
 
     /**
