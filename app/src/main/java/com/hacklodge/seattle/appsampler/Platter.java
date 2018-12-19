@@ -97,6 +97,18 @@ public class Platter extends AppCompatActivity {
         buttons.add(appB4);
         for (int i = 0; i < apps.length; i++) {
             appTexts.get(i).setText(apps[i].getAppName());
+            final TextView text = appTexts.get(i);
+            appTexts.get(i).post(new Runnable() {
+                @Override
+                public void run() {
+                    int lineCount = text.getLineCount();
+                    for(int i = 3-lineCount; i > 0; i--){
+                        String Holder = (String)text.getText();
+                        Holder = "\n"+Holder;
+                        text.setText(Holder);
+                    }
+                }
+            });
             updateButton(i);
         }
         for(int i = 0; i < apps.length; i++){
@@ -127,6 +139,19 @@ public class Platter extends AppCompatActivity {
                 for(int i = 0; i < apps.length ;i++) {
                     final int index = i;
                     apps[index].loadIcon(views[index]);
+                    appTexts.get(i).setText(apps[i].getAppName());
+                    final TextView text = appTexts.get(i);
+                    appTexts.get(i).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            int lineCount = text.getLineCount();
+                            for(int i = 3-lineCount; i > 0; i--){
+                                String Holder = (String)text.getText();
+                                Holder = "\n"+Holder;
+                                text.setText(Holder);
+                            }
+                        }
+                    });
                     updateButton(index);
                     /*animate(containers[index], new Callback() {
                         @Override
@@ -149,6 +174,18 @@ public class Platter extends AppCompatActivity {
         super.onResume();
         for(int i = 0; i < apps.length ;i++) {
             appTexts.get(i).setText(apps[i].getAppName());
+            final TextView text = appTexts.get(i);
+            appTexts.get(i).post(new Runnable() {
+                @Override
+                public void run() {
+                    int lineCount = text.getLineCount();
+                    for(int i = 3-lineCount; i > 0; i--){
+                        String Holder = (String)text.getText();
+                        Holder = "\n"+Holder;
+                        text.setText(Holder);
+                    }
+                }
+            });
             updateButton(i);
         }
     }
