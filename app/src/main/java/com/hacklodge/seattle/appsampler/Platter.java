@@ -101,6 +101,7 @@ public class Platter extends AppCompatActivity {
             fixText(appTexts.get(i));
             updateButton(i);
         }
+
         for(int i = 0; i < apps.length; i++){
             final int index = i;
             buttons.get(i).setOnClickListener(new View.OnClickListener() {
