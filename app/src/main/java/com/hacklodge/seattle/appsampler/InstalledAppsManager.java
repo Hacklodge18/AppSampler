@@ -33,7 +33,6 @@ public class InstalledAppsManager {
     private Set<AppHolder> favorites;
 
     private AppHolder[] platter = new AppHolder[4];
-
     public InstalledAppsManager(Context c) {
         installedPrograms = load(c, INSTALL_LIST_FILENAME);
         favorites = load(c, FAVORITES_FILENAME);
@@ -315,5 +314,8 @@ public class InstalledAppsManager {
      */
     public AppHolder[] getPlatter() {
         return platter.clone();
+    }
+    public boolean inInstalledProgram(AppHolder a){
+        return installedPrograms.contains(a);
     }
 }
