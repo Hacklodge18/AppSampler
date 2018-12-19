@@ -40,6 +40,7 @@ public class Platter extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_platter);
+
 //        handler = new Handler();
         Manager = new InstalledAppsManager(this.getApplicationContext());
         apps = Manager.getPlatter();
@@ -85,8 +86,8 @@ public class Platter extends AppCompatActivity {
         appTexts.add(appTextView3);
         appTexts.add(appTextView4);
         ImageButton cycleB = (ImageButton) findViewById(R.id.cycleB);
-        ImageView cycleP = (ImageView) findViewById(R.id.cycleP);
-        Picasso.get().load(R.drawable.cycle).into(cycleP);
+////        ImageView cycleP = (ImageView) findViewById(R.id.cycleP);
+//        Picasso.get().load(R.drawable.cycle).into(cycleB);
         appB1 = (Button) findViewById(R.id.app1);
         appB2 = (Button) findViewById(R.id.app2);
         appB3 = (Button) findViewById(R.id.app3);
