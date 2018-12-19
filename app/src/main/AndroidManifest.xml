@@ -18,6 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Browser">
+            android:label="Browser"
+            android:parentActivityName=".Platter">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hacklodge.seattle.appsampler.Platter" />
+        </activity>
     </application>
 
 </manifest>

@@ -1,9 +1,14 @@
 package com.hacklodge.seattle.appsampler;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.gc.android.market.api.MarketSession;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -40,9 +45,17 @@ public class InstallUtility {
         /*Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(app.getApkUri(), "application/vnd.android.package-archive");
         c.startActivity(intent);*/
-        Intent goToMarket = new Intent(Intent.ACTION_VIEW)
-                .setData(Uri.parse("market://details?id=" + app.getPackageName()));
-        c.startActivity(goToMarket);
+//        Intent goToMarket = new Intent(Intent.ACTION_VIEW)
+//                .setData(Uri.parse("market://details?id=" + app.getPackageName()));
+//        c.startActivity(goToMarket);
+//
+
+        Intent browserIntent = new Intent(c, Browser.class);
+        Bundle b = new Bundle();
+        b.putString("package", app.getPackageName());
+        browserIntent.putExtras(b);
+        c.startActivity(browserIntent);
+
         manager.addInstalled(c, app);
     }
 
