@@ -140,11 +140,11 @@ public class Platter extends AppCompatActivity {
                     final int index = i;
 
                     animate(containers[index], new Callback() {
-                            @Override
-                            public void function() {
-                                apps[index].loadIcon(views[index]);
-                                updateButton(index);
-                            }
+                        @Override
+                        public void function() {
+                            apps[index].loadIcon(views[index]);
+                            updateButton(index);
+                        }
                     });
 
                     appTexts.get(i).setText(apps[i].getAppName());
