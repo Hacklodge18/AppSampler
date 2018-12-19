@@ -158,6 +158,7 @@ public class Platter extends AppCompatActivity {
             appTexts.get(i).setText(apps[i].getAppName());
             fixText(appTexts.get(i));
             updateButton(i);
+
         }
     }
 
@@ -179,6 +180,7 @@ public class Platter extends AppCompatActivity {
         if (! Manager.isInstalled(this.getApplicationContext(), apps[num])) {
             buttons.get(num).setText("Install");
             buttons.get(num).setBackgroundColor(Color.CYAN);
+            Manager.removeInstalled(this.getApplicationContext(), apps[num]);
         } else {
             buttons.get(num).setText("Play");
             buttons.get(num).setBackgroundColor(Color.GREEN);
