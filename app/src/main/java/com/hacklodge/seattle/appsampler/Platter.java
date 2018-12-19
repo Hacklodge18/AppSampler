@@ -133,11 +133,11 @@ public class Platter extends AppCompatActivity {
                         public void function() {
                             apps[index].loadIcon(views[index]);
                             updateButton(index);
+                            appTexts.get(index).setText(apps[index].getAppName());
+                            fixText(appTexts.get(index));
                         }
                     });
 
-                    appTexts.get(i).setText(apps[i].getAppName());
-                    fixText(appTexts.get(i));
                 }
 
                 List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
