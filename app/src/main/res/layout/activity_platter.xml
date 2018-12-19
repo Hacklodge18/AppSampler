@@ -32,11 +32,12 @@
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/btn_star"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.046"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.335" />
+                app:layout_constraintVertical_bias="0.0" />
+
             <ImageView
                 android:id="@+id/appIMG1"
                 android:layout_width="87dp"
@@ -71,14 +72,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                app:layout_constraintEnd_toStartOf="@+id/appTextView1"
-                tools:layout_editor_absoluteY="5dp" />
-
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -95,11 +88,11 @@
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/btn_star"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.046"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.335" />
+                app:layout_constraintVertical_bias="0.0" />
             <TextView
                 android:id="@+id/appTextView2"
                 android:layout_width="match_parent"
@@ -155,17 +148,18 @@
             android:layout_weight="1"
             android:background="@drawable/tray"
             android:layout_marginRight="10dp">
+
             <ImageButton
                 android:id="@+id/appFB3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/btn_star"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.046"
+                app:layout_constraintHorizontal_bias="0.038"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.312" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/appTextView3"
@@ -231,11 +225,11 @@
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/btn_star"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.046"
+                app:layout_constraintHorizontal_bias="0.038"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.312" />
+                app:layout_constraintVertical_bias="0.0" />
             <Button
                 android:id="@+id/app4"
                 android:layout_width="wrap_content"

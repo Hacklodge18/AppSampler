@@ -14,6 +14,7 @@ import android.net.Uri;
 import java.util.*;
 import android.widget.ImageView;
 import android.widget.ImageButton;
+import android.graphics.drawable.Drawable;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +28,7 @@ public class Platter extends AppCompatActivity {
     Button appB3;
     Button appB4;
     Button cycleB;
+    ArrayList<ButtonHolder> favoriteButton;
     Handler handler;
     ArrayList<TextView> appTexts;
     AppHolder[] apps;
@@ -58,29 +60,6 @@ public class Platter extends AppCompatActivity {
         TextView appTextView2 = (TextView) findViewById(R.id.appTextView2);
         TextView appTextView3 = (TextView) findViewById(R.id.appTextView3);
         TextView appTextView4 = (TextView) findViewById(R.id.appTextView4);
-//        TextView tester = (TextView) findViewById(R.id.tester);
-//        tester.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                String line = "                          ";
-//                TextView tester = (TextView) findViewById(R.id.tester);
-//                String TextHolder = (String) tester.getText();
-//                int lineCount = tester.getLineCount();
-//                TextView tester2 = (TextView) findViewById(R.id.tester2);
-//                int number = 0;
-//                tester2.setText(lineCount+"");
-//                for(int i = 3-lineCount; i > 0; i--){
-//                    String Holder = (String)tester.getText();
-//                    Holder = "\n"+Holder;
-//                    tester.setText(Holder);
-//                    number++;
-//
-//                }
-//                tester2.setText(number+"");
-//
-//                // Use lineCount here
-//            }
-//        });
         appTexts.add(appTextView1);
         appTexts.add(appTextView2);
         appTexts.add(appTextView3);
@@ -96,6 +75,27 @@ public class Platter extends AppCompatActivity {
         buttons.add(appB2);
         buttons.add(appB3);
         buttons.add(appB4);
+        favoriteButton = new ArrayList<ButtonHolder>();
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB1),false,apps[0]));
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB2),false,apps[1]));
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB3),false,apps[2]));
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB4),false,apps[3]));
+        for(int i = 0; i < favoriteButton.size(); i++){
+            final int index = i;
+            favoriteButton.get(i).getImageButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(favoriteButton.get(index).getOn() == false){
+                        favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star_big_on));
+                        favoriteButton.get(index).press();
+                        Manager.keep(view.getContext(),favoriteButton.get(index).getAppHolder());
+                    }else{
+                        favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star));
+                        Manager.addInstalled(view.getContext(),favoriteButton.get(index).getAppHolder());
+                    }
+                }
+            });
+        }
         for (int i = 0; i < apps.length; i++) {
             appTexts.get(i).setText(apps[i].getAppName());
             fixText(appTexts.get(i));
