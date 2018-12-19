@@ -85,13 +85,14 @@ public class Platter extends AppCompatActivity {
             favoriteButton.get(i).getImageButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(favoriteButton.get(index).getOn() == false){
+                    if(favoriteButton.get(index).getOn() == false && Manager.isInstalled(view.getContext(),favoriteButton.get(index).getAppHolder()) == true){
                         favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star_big_on));
-                        favoriteButton.get(index).press();
+                        favoriteButton.get(index).setOn(true);
                         Manager.keep(view.getContext(),favoriteButton.get(index).getAppHolder());
-                    }else{
+                    }else if(favoriteButton.get(index).getOn() == true && Manager.isInstalled(view.getContext(),favoriteButton.get(index).getAppHolder()) == true){
                         favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star));
                         Manager.addInstalled(view.getContext(),favoriteButton.get(index).getAppHolder());
+                        favoriteButton.get(index).setOn(false);
                     }
                 }
             });
@@ -137,6 +138,7 @@ public class Platter extends AppCompatActivity {
                             updateButton(index);
                             appTexts.get(index).setText(apps[index].getAppName());
                             fixText(appTexts.get(index));
+                            updateFavButton();
                         }
                     });
 
@@ -182,7 +184,15 @@ public class Platter extends AppCompatActivity {
             buttons.get(num).setBackgroundColor(Color.GREEN);
         }
     }
-
+    private void updateFavButton(){
+        for(int i = 0; i < favoriteButton.size(); i++) {
+            favoriteButton.get(i).setOn(false);
+            favoriteButton.get(i).getImageButton().setBackground(this.getApplicationContext().getDrawable(android.R.drawable.btn_star));
+            //if(Manager.infavorites == true){
+            //favoriteButton.get(i).getImageButton().setBackground(this.getApplicationContext().getDrawable(android.R.drawable.btn_star_big_on);
+        }
+        //}
+    }
     private void animate(final View viewToAnim, float scaleAmount, long time, final Callback callback) {
         final ScaleAnimation grow = new ScaleAnimation(1-scaleAmount, 1f, 1-scaleAmount, 1f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);

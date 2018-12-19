@@ -12,12 +12,8 @@ public class ButtonHolder {
     public boolean getOn(){
         return on;
     }
-    public void press(){
-        if(on == true){
-            on = false;
-        }else{
-            on = true;
-        }
+    public void setOn(boolean a){
+        on = a;
     }
     public ImageButton getImageButton(){
         return b;
