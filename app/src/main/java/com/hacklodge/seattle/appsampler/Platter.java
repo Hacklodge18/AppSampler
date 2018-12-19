@@ -141,8 +141,6 @@ public class Platter extends AppCompatActivity {
 
                 }
 
-                animate(findViewById(R.id.cycleB), 1f, 500, null);
-
                 List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
                 for(int i = 0; i < appsToUninstall.size(); i++){
                     InstallUtility.uninstall(view.getContext(),appsToUninstall.get(i), Manager);
