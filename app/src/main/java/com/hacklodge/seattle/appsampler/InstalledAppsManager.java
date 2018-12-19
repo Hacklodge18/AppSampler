@@ -33,7 +33,6 @@ public class InstalledAppsManager {
     private Set<AppHolder> installedPrograms;
 
     private AppHolder[] platter = new AppHolder[4];
-
     public InstalledAppsManager(Context c) {
         loadInstalled(c);
         loadPlatter(c);
@@ -279,5 +278,8 @@ public class InstalledAppsManager {
      */
     public AppHolder[] getPlatter() {
         return platter.clone();
+    }
+    public boolean inInstalledProgram(AppHolder a){
+        return installedPrograms.contains(a);
     }
 }

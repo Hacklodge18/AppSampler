@@ -180,7 +180,9 @@ public class Platter extends AppCompatActivity {
         if (! Manager.isInstalled(this.getApplicationContext(), apps[num])) {
             buttons.get(num).setText("Install");
             buttons.get(num).setBackgroundColor(Color.CYAN);
-            Manager.removeInstalled(this.getApplicationContext(), apps[num]);
+            if(Manager.inInstalledProgram(apps[num]) == true) {
+                Manager.removeInstalled(this.getApplicationContext(), apps[num]);
+            }
         } else {
             buttons.get(num).setText("Play");
             buttons.get(num).setBackgroundColor(Color.GREEN);
