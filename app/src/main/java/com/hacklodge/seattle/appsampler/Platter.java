@@ -1,8 +1,17 @@
 package com.hacklodge.seattle.appsampler;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.constraint.Group;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -41,10 +50,19 @@ public class Platter extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_platter);
+        setContentView(R.layout.container);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(android.R.drawable.btn_star_big_on);
 
 //        handler = new Handler();
         Manager = new InstalledAppsManager(this.getApplicationContext());
+
+        updateFavorites();
+
         apps = Manager.getPlatter();
         ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
         apps[0].loadIcon(appIMG1);
@@ -88,10 +106,12 @@ public class Platter extends AppCompatActivity {
                     if(favoriteButton.get(index).getOn() == false && Manager.isInstalled(view.getContext(),favoriteButton.get(index).getAppHolder()) == true){
                         favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star_big_on));
                         favoriteButton.get(index).setOn(true);
-                        Manager.keep(view.getContext(),favoriteButton.get(index).getAppHolder());
-                    }else if(favoriteButton.get(index).getOn() == true && Manager.isInstalled(view.getContext(),favoriteButton.get(index).getAppHolder()) == true){
+                        Manager.addFavorite(view.getContext(),favoriteButton.get(index).getAppHolder());
+                        updateFavorites();
+                    }else{
                         favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star));
-                        Manager.addInstalled(view.getContext(),favoriteButton.get(index).getAppHolder());
+                        Manager.removeFavorite(view.getContext(),favoriteButton.get(index).getAppHolder());
+                        updateFavorites();
                         favoriteButton.get(index).setOn(false);
                     }
                 }
@@ -152,6 +172,7 @@ public class Platter extends AppCompatActivity {
         });
 
     }
+
     public void onResume(){
         super.onResume();
         for(int i = 0; i < apps.length ;i++) {
@@ -160,6 +181,37 @@ public class Platter extends AppCompatActivity {
             updateButton(i);
 
         }
+    }
+
+    private void updateFavorites() {
+        NavigationView nav = findViewById(R.id.nav_view);
+        Menu menu = nav.getMenu();
+
+        for (int i = 0; i < menu.size(); i++) {
+            menu.removeItem(i);
+        }
+
+        final AppHolder[] favorites = Manager.getFavorites();
+        for (AppHolder app : favorites) {
+            menu.add(app.getAppName());
+        }
+
+        final Context c = this;
+
+        nav.setNavigationItemSelectedListener(
+            new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+                public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    String appName = (String) menuItem.getTitle();
+                    for (AppHolder app : favorites) {
+                        if (app.getAppName().equals(appName)) {
+                            Manager.removeFavorite(c, app);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
     }
 
     private void fixText(final TextView text) {
@@ -227,6 +279,17 @@ public class Platter extends AppCompatActivity {
         });
 
         viewToAnim.startAnimation(shrink);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
