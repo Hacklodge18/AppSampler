@@ -201,8 +201,10 @@ public class Platter extends AppCompatActivity {
     }
 
     private void animate(final View viewToAnim, final Callback callback) {
-        final ScaleAnimation grow = new ScaleAnimation(0f, 1f, 0f, 1f);
-        final ScaleAnimation shrink = new ScaleAnimation(1f, 0f, 1f, 0f);
+        final ScaleAnimation grow = new ScaleAnimation(0f, 1f, 0f, 1f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        final ScaleAnimation shrink = new ScaleAnimation(1f, 0f, 1f, 0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
         grow.setDuration(500);
         shrink.setDuration(500);
