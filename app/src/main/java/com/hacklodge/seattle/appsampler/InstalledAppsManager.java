@@ -54,6 +54,13 @@ public class InstalledAppsManager {
         }
     }
 
+    public void keep(Context c, AppHolder app) {
+        if (isInstalled(c, app)) {
+            installedPrograms.remove(app);
+            saveCurrentInstalled(c);
+        }
+    }
+
     public boolean isInstalled(Context c, AppHolder app) {
         boolean checker = ensureInstalled(c, app.getPackageName());
         if(checker){

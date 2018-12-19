@@ -128,7 +128,7 @@ public class Platter extends AppCompatActivity {
                 for(int i = 0; i < apps.length ;i++) {
                     final int index = i;
 
-                    animate(containers[index], new Callback() {
+                    animate(containers[index], 1, 500, new Callback() {
                         @Override
                         public void function() {
                             apps[index].loadIcon(views[index]);
@@ -139,6 +139,8 @@ public class Platter extends AppCompatActivity {
                     });
 
                 }
+
+                animate(findViewById(R.id.cycleB), 1f, 500, null);
 
                 List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
                 for(int i = 0; i < appsToUninstall.size(); i++){
@@ -181,14 +183,14 @@ public class Platter extends AppCompatActivity {
         }
     }
 
-    private void animate(final View viewToAnim, final Callback callback) {
-        final ScaleAnimation grow = new ScaleAnimation(0f, 1f, 0f, 1f,
+    private void animate(final View viewToAnim, float scaleAmount, long time, final Callback callback) {
+        final ScaleAnimation grow = new ScaleAnimation(1-scaleAmount, 1f, 1-scaleAmount, 1f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        final ScaleAnimation shrink = new ScaleAnimation(1f, 0f, 1f, 0f,
+        final ScaleAnimation shrink = new ScaleAnimation(1f, 1-scaleAmount, 1f, 1-scaleAmount,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
-        grow.setDuration(500);
-        shrink.setDuration(500);
+        grow.setDuration(time);
+        shrink.setDuration(time);
 
         shrink.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -197,7 +199,9 @@ public class Platter extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                callback.function();
+                if (callback != null) {
+                    callback.function();
+                }
                 viewToAnim.setAnimation(grow);
                 grow.start();
             }
