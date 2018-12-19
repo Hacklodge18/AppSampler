@@ -94,7 +94,10 @@ public class InstalledAppsManager {
     public List<AppHolder> shouldBeUninstalled() {
         List<AppHolder> apps = new ArrayList<>();
         for (AppHolder installed : installedPrograms) {
+            if (favorites.contains(installed)) continue;
+            
             apps.add(installed);
+
             for (AppHolder shown : platter) {
                 if (installed.equals(shown)) {
                     apps.remove(installed);
@@ -111,7 +114,7 @@ public class InstalledAppsManager {
     private Set<AppHolder> load(Context c, String filename) {
         Set<AppHolder> result = new HashSet<>();
         File dir = c.getFilesDir();
-        File installList = new File(dir, INSTALL_LIST_FILENAME);
+        File installList = new File(dir, filename);
 
         try {
             byte[] content = Files.readAllBytes(installList.toPath());
@@ -156,7 +159,7 @@ public class InstalledAppsManager {
         }
     }
 
-    private boolean ensureInstalled(Context c, String packageName) {
+    public boolean ensureInstalled(Context c, String packageName) {
         boolean found = true;
 
         try {

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -38,6 +39,7 @@ public class Platter extends AppCompatActivity {
     Button appB4;
     Button cycleB;
     ArrayList<ButtonHolder> favoriteButton;
+    SubMenu favoritesMenu;
     Handler handler;
     ArrayList<TextView> appTexts;
     AppHolder[] apps;
@@ -72,6 +74,7 @@ public class Platter extends AppCompatActivity {
         apps[2].loadIcon(appIMG3);
         ImageView appIMG4 = (ImageView) findViewById(R.id.appIMG4);
         apps[3].loadIcon(appIMG4);
+
         buttons = new ArrayList<Button>();
         appTexts = new  ArrayList<TextView>();
         TextView appTextView1 = (TextView) findViewById(R.id.appTextView1);
@@ -82,9 +85,11 @@ public class Platter extends AppCompatActivity {
         appTexts.add(appTextView2);
         appTexts.add(appTextView3);
         appTexts.add(appTextView4);
+
         ImageButton cycleB = (ImageButton) findViewById(R.id.cycleB);
 ////        ImageView cycleP = (ImageView) findViewById(R.id.cycleP);
 //        Picasso.get().load(R.drawable.cycle).into(cycleB);
+
         appB1 = (Button) findViewById(R.id.app1);
         appB2 = (Button) findViewById(R.id.app2);
         appB3 = (Button) findViewById(R.id.app3);
@@ -93,26 +98,39 @@ public class Platter extends AppCompatActivity {
         buttons.add(appB2);
         buttons.add(appB3);
         buttons.add(appB4);
+
         favoriteButton = new ArrayList<ButtonHolder>();
         favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB1),false,apps[0]));
         favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB2),false,apps[1]));
         favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB3),false,apps[2]));
         favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB4),false,apps[3]));
+
         for(int i = 0; i < favoriteButton.size(); i++){
             final int index = i;
             favoriteButton.get(i).getImageButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(favoriteButton.get(index).getOn() == false && Manager.isInstalled(view.getContext(),favoriteButton.get(index).getAppHolder()) == true){
-                        favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star_big_on));
-                        favoriteButton.get(index).setOn(true);
-                        Manager.addFavorite(view.getContext(),favoriteButton.get(index).getAppHolder());
+                    ButtonHolder btn = favoriteButton.get(index);
+                    if(! btn.getOn() &&
+                            Manager.ensureInstalled(view.getContext(),btn.getAppHolder().getPackageName())){
+                        System.out.println("printing on");
+                        btn.getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star_big_on));
+                        btn.setOn(true);
+                        Manager.addFavorite(view.getContext(), btn.getAppHolder());
                         updateFavorites();
-                    }else{
-                        favoriteButton.get(index).getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star));
-                        Manager.removeFavorite(view.getContext(),favoriteButton.get(index).getAppHolder());
+                    }else if (! btn.getOn() &&
+                            ! Manager.ensureInstalled(view.getContext(), btn.getAppHolder().getPackageName())){
+                        System.out.println("printing off");
+                        btn.getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star));
+                        Manager.removeFavorite(view.getContext(), btn.getAppHolder());
                         updateFavorites();
-                        favoriteButton.get(index).setOn(false);
+                        btn.setOn(false);
+                    } else {
+                        System.out.println("printing off");
+                        btn.getImageButton().setBackground(view.getContext().getDrawable(android.R.drawable.btn_star));
+                        Manager.removeFavorite(view.getContext(), btn.getAppHolder());
+                        updateFavorites();
+                        btn.setOn(false);
                     }
                 }
             });
@@ -184,16 +202,16 @@ public class Platter extends AppCompatActivity {
     }
 
     private void updateFavorites() {
-        NavigationView nav = findViewById(R.id.nav_view);
+        final NavigationView nav = findViewById(R.id.nav_view);
         Menu menu = nav.getMenu();
 
-        for (int i = 0; i < menu.size(); i++) {
-            menu.removeItem(i);
-        }
+        if (favoritesMenu != null) menu.removeItem(favoritesMenu.getItem().getItemId());
+
+        favoritesMenu = menu.addSubMenu("Favorites");
 
         final AppHolder[] favorites = Manager.getFavorites();
         for (AppHolder app : favorites) {
-            menu.add(app.getAppName());
+            favoritesMenu.add(app.getAppName());
         }
 
         final Context c = this;
@@ -206,12 +224,15 @@ public class Platter extends AppCompatActivity {
                     for (AppHolder app : favorites) {
                         if (app.getAppName().equals(appName)) {
                             Manager.removeFavorite(c, app);
+                            updateFavorites();
                             return true;
                         }
                     }
                     return false;
                 }
             });
+
+        nav.invalidate();
     }
 
     private void fixText(final TextView text) {
