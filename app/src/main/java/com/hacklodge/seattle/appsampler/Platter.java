@@ -180,7 +180,7 @@ public class Platter extends AppCompatActivity {
             buttons.get(num).setText("Install");
             buttons.get(num).setBackgroundColor(Color.CYAN);
         } else {
-            appB1.setText("Play");
+            buttons.get(num).setText("Play");
             buttons.get(num).setBackgroundColor(Color.GREEN);
         }
     }
