@@ -97,18 +97,7 @@ public class Platter extends AppCompatActivity {
         buttons.add(appB4);
         for (int i = 0; i < apps.length; i++) {
             appTexts.get(i).setText(apps[i].getAppName());
-            final TextView text = appTexts.get(i);
-            appTexts.get(i).post(new Runnable() {
-                @Override
-                public void run() {
-                    int lineCount = text.getLineCount();
-                    for(int i = 3-lineCount; i > 0; i--){
-                        String Holder = (String)text.getText();
-                        Holder = "\n"+Holder;
-                        text.setText(Holder);
-                    }
-                }
-            });
+            fixText(appTexts.get(i));
             updateButton(i);
         }
         for(int i = 0; i < apps.length; i++){
@@ -148,18 +137,7 @@ public class Platter extends AppCompatActivity {
                     });
 
                     appTexts.get(i).setText(apps[i].getAppName());
-                    final TextView text = appTexts.get(i);
-                    appTexts.get(i).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int lineCount = text.getLineCount();
-                            for(int i = 3-lineCount; i > 0; i--){
-                                String Holder = (String)text.getText();
-                                Holder = "\n"+Holder;
-                                text.setText(Holder);
-                            }
-                        }
-                    });
+                    fixText(appTexts.get(i));
                 }
 
                 List<AppHolder> appsToUninstall = Manager.shouldBeUninstalled();
@@ -174,20 +152,23 @@ public class Platter extends AppCompatActivity {
         super.onResume();
         for(int i = 0; i < apps.length ;i++) {
             appTexts.get(i).setText(apps[i].getAppName());
-            final TextView text = appTexts.get(i);
-            appTexts.get(i).post(new Runnable() {
-                @Override
-                public void run() {
-                    int lineCount = text.getLineCount();
-                    for(int i = 3-lineCount; i > 0; i--){
-                        String Holder = (String)text.getText();
-                        Holder = "\n"+Holder;
-                        text.setText(Holder);
-                    }
-                }
-            });
+            fixText(appTexts.get(i));
             updateButton(i);
         }
+    }
+
+    private void fixText(final TextView text) {
+        text.post(new Runnable() {
+            @Override
+            public void run() {
+                int lineCount = text.getLineCount();
+                for(int i = 3-lineCount; i > 0; i--){
+                    String Holder = (String)text.getText();
+                    Holder = "\n"+Holder;
+                    text.setText(Holder);
+                }
+            }
+        });
     }
 
     private void updateButton(int num) {
