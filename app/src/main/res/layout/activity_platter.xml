@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/table_blank"
     tools:context=".Platter">
 
     <LinearLayout
@@ -15,13 +16,14 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_marginRight="10dp"
             android:id="@+id/element1"
+            android:background="@drawable/tray"
             android:layout_weight="1">
 
             <ImageView
@@ -47,6 +49,7 @@
                 android:id="@+id/appTextView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:maxLines="3"
                 android:singleLine="false"
                 android:text="TextView"
@@ -63,12 +66,14 @@
             android:layout_height="match_parent"
             android:id="@+id/element2"
             android:layout_weight="1"
+            android:background="@drawable/tray"
             android:layout_marginLeft="10dp">
 
             <TextView
                 android:id="@+id/appTextView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:maxLines="3"
                 android:singleLine="false"
                 android:text="TextView"
@@ -108,7 +113,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_weight="1"
+        android:layout_weight="1.8"
         android:orientation="horizontal">
 
         <android.support.constraint.ConstraintLayout
@@ -116,12 +121,14 @@
             android:layout_height="match_parent"
             android:id="@+id/element3"
             android:layout_weight="1"
+            android:background="@drawable/tray"
             android:layout_marginRight="10dp">
 
             <TextView
                 android:id="@+id/appTextView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:maxLines="3"
                 android:singleLine="false"
                 android:text="TextView"
@@ -157,12 +164,14 @@
             android:layout_height="match_parent"
             android:id="@+id/element4"
             android:layout_weight="1"
+            android:background="@drawable/tray"
             android:layout_marginLeft="10dp">
 
             <TextView
                 android:id="@+id/appTextView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:maxLines="3"
                 android:singleLine="false"
                 android:text="TextView"
@@ -199,7 +208,8 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:layout_weight="0">
 
         <ImageButton
             android:id="@+id/cycleB"
