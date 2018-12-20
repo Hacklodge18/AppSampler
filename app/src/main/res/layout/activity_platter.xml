@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/table_blank"
+    android:background="#FFFFFF"
     android:layout_marginTop="50dp"
     tools:context=".Platter">
 
@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="10dp"
             android:id="@+id/element1"
-            android:background="@drawable/tray"
+            android:background="#2962FF"
             android:layout_weight="1">
 
             <ImageButton
@@ -41,8 +41,8 @@
 
             <ImageView
                 android:id="@+id/appIMG1"
-                android:layout_width="87dp"
-                android:layout_height="87dp"
+                android:layout_width="58dp"
+                android:layout_height="56dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -51,8 +51,8 @@
 
             <Button
                 android:id="@+id/app1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="42dp"
                 android:text="Button"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -80,8 +80,18 @@
             android:layout_height="match_parent"
             android:id="@+id/element2"
             android:layout_weight="1"
-            android:background="@drawable/tray"
+            android:background="#D50000"
             android:layout_marginLeft="10dp">
+
+            <Button
+                android:id="@+id/app2"
+                android:layout_width="75dp"
+                android:layout_height="42dp"
+                android:text="Button"
+                app:layout_constraintHorizontal_bias="0.505"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appIMG2" />
 
             <ImageButton
                 android:id="@+id/appFB2"
@@ -112,22 +122,13 @@
 
             <ImageView
                 android:id="@+id/appIMG2"
-                android:layout_width="87dp"
-                android:layout_height="87dp"
+                android:layout_width="130dp"
+                android:layout_height="54dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_launcher_background" />
-
-            <Button
-                android:id="@+id/app2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appIMG2" />
 
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
@@ -147,8 +148,18 @@
             android:layout_height="match_parent"
             android:id="@+id/element3"
             android:layout_weight="1"
-            android:background="@drawable/tray"
+            android:background="#FF6D00"
             android:layout_marginRight="10dp">
+
+            <Button
+                android:id="@+id/app3"
+                android:layout_width="75dp"
+                android:layout_height="42dp"
+                android:text="Button"
+                app:layout_constraintHorizontal_bias="0.505"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appIMG3" />
 
             <ImageButton
                 android:id="@+id/appFB3"
@@ -179,22 +190,14 @@
 
             <ImageView
                 android:id="@+id/appIMG3"
-                android:layout_width="87dp"
-                android:layout_height="87dp"
+                android:layout_width="75dp"
+                android:layout_height="62dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_launcher_background"  />
+                app:srcCompat="@drawable/ic_launcher_background" />
 
-            <Button
-                android:id="@+id/app3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appIMG3" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -202,8 +205,18 @@
             android:layout_height="match_parent"
             android:id="@+id/element4"
             android:layout_weight="1"
-            android:background="@drawable/tray"
+            android:background="#00C853"
             android:layout_marginLeft="10dp">
+
+            <Button
+                android:id="@+id/app4"
+                android:layout_width="75dp"
+                android:layout_height="42dp"
+                android:text="Button"
+                app:layout_constraintHorizontal_bias="0.517"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appIMG4" />
 
             <TextView
                 android:id="@+id/appTextView4"
@@ -231,19 +244,11 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
-            <Button
-                android:id="@+id/app4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appIMG4" />
 
             <ImageView
                 android:id="@+id/appIMG4"
-                android:layout_width="87dp"
-                android:layout_height="87dp"
+                android:layout_width="72dp"
+                android:layout_height="63dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

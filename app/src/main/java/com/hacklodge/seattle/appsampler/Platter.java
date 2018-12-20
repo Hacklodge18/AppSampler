@@ -232,6 +232,7 @@ public class Platter extends AppCompatActivity {
         text.post(new Runnable() {
             @Override
             public void run() {
+                text.setTextColor(-1);
                 int lineCount = text.getLineCount();
                 for(int i = 3-lineCount; i > 0; i--){
                     String Holder = (String)text.getText();
