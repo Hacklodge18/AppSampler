@@ -298,6 +298,7 @@ public class Platter extends AppCompatActivity {
             buttons.get(num).setTextColor(Color.parseColor("#FFFFFF"));
         } else {
             buttons.get(num).setText("Play");
+            buttons.get(num).setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
     private void updateFavButton(){

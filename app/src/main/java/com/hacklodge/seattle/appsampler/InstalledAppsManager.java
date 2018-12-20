@@ -2,6 +2,7 @@ package com.hacklodge.seattle.appsampler;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.ArraySet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +29,11 @@ public class InstalledAppsManager {
 
     private static final String FAVORITES_FILENAME = "HERE_ARE_THE_FAVES.json";
 
+    private static final String HAS_BEEN_CLICKED_FILENAME = "HAS_BEEN_CLICKED_FILENAME.json";
+
     private Set<AppHolder> installedPrograms;
+
+    private Set<AppHolder> hasBeenClicked;
 
     private Set<AppHolder> favorites;
 
@@ -37,7 +42,7 @@ public class InstalledAppsManager {
     private AppHolder[] platter = new AppHolder[4];
     public InstalledAppsManager(Context c) {
         context = c;
-
+        hasBeenClicked = new ArraySet<AppHolder>();
         installedPrograms = load(INSTALL_LIST_FILENAME);
         favorites = load(FAVORITES_FILENAME);
         loadPlatter();
@@ -54,6 +59,7 @@ public class InstalledAppsManager {
     }
 
     public void addInstalled(AppHolder app) {
+        hasBeenClicked.add(app);
         if (ensureInstalled(app.getPackageName())) {
             installedPrograms.add(app);
             saveCurrentInstalled();
@@ -117,10 +123,19 @@ public class InstalledAppsManager {
 
     public List<AppHolder> shouldBeUninstalled() {
         List<AppHolder> apps = new ArrayList<>();
-        for (AppHolder installed : installedPrograms) {
-            if (! isFavorite(installed)) {
+        for (AppHolder installed : hasBeenClicked) {
+            if (! isFavorite(installed) && ensureInstalled(installed.getPackageName()) == true) {
                 apps.add(installed);
-
+                for (AppHolder shown : platter) {
+                    if (installed.equals(shown)) {
+                        apps.remove(installed);
+                    }
+                }
+            }
+        }
+        for (AppHolder installed : installedPrograms) {
+            if (! isFavorite(installed) && apps.contains(installed)==false) {
+                apps.add(installed);
                 for (AppHolder shown : platter) {
                     if (installed.equals(shown)) {
                         apps.remove(installed);
@@ -331,6 +346,9 @@ public class InstalledAppsManager {
 
     public void saveCurrentInstalled() {
         saveAppHolders(installedPrograms.toArray(new AppHolder[0]), INSTALL_LIST_FILENAME);
+    }
+    public void saveHasBeenClicked() {
+        saveAppHolders(hasBeenClicked.toArray(new AppHolder[0]), HAS_BEEN_CLICKED_FILENAME);
     }
 
     public void savePlatter() {
