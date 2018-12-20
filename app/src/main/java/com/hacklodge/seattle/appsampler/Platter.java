@@ -2,6 +2,7 @@ package com.hacklodge.seattle.appsampler;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -294,10 +295,9 @@ public class Platter extends AppCompatActivity {
         Manager.updateInstalled(apps[num]);
         if (! Manager.isInstalled(apps[num])) {
             buttons.get(num).setText("Install");
-            buttons.get(num).setBackgroundColor(Color.parseColor(colors[num]));
+            buttons.get(num).setTextColor(Color.parseColor("#FFFFFF"));
         } else {
             buttons.get(num).setText("Play");
-            buttons.get(num).setBackgroundColor(Color.GREEN);
         }
     }
     private void updateFavButton(){
