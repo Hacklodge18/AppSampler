@@ -108,7 +108,6 @@ public class InstalledAppsManager {
      * @return
      */
     public boolean isInstalled(Context c, AppHolder app) {
-        System.out.println("boob" + ensureInstalled(c, app.getPackageName()));
         return ensureInstalled(c, app.getPackageName());//installedPrograms.contains(app);
     }
 
