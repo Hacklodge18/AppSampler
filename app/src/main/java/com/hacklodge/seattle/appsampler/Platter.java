@@ -242,7 +242,8 @@ public class Platter extends AppCompatActivity {
 
         final AppHolder[] favorites = Manager.getFavorites();
         for (AppHolder app : favorites) {
-            favoritesMenu.add(app.getAppName());
+            favoritesMenu.add("Play \"" + app.getAppName() + "\"");
+            favoritesMenu.add("Delete \"" + app.getAppName() + "\"");
         }
 
         final Context c = this;
@@ -251,10 +252,19 @@ public class Platter extends AppCompatActivity {
             new NavigationView.OnNavigationItemSelectedListener() {
             @Override
                 public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    String action = (String) menuItem.getTitle();
+                    action = action.substring(0, action.indexOf('\"') + 1);
+
                     String appName = (String) menuItem.getTitle();
+                    appName = appName.substring(appName.indexOf('\"') + 1, appName.length()-1);
                     for (AppHolder app : favorites) {
                         if (app.getAppName().equals(appName)) {
-                            Manager.removeFavorite(c, app);
+                            if (action.equals("Play \"")) {
+                                InstallUtility.launch(c, app);
+                            } else {
+                                Manager.removeFavorite(c, app);
+                            }
+
                             updateEverything();
                             return true;
                         }
