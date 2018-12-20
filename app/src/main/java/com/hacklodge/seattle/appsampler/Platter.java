@@ -92,51 +92,12 @@ public class Platter extends AppCompatActivity {
         buttons.add((Button) findViewById(R.id.app3));
         buttons.add((Button) findViewById(R.id.app4));
 
-        favoriteButton = new ArrayList<ButtonHolder>();
-        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB1),false,apps[0]));
-        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB2),false,apps[1]));
-        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB3),false,apps[2]));
-        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB4),false,apps[3]));
-
-        for(int i = 0; i < favoriteButton.size(); i++){
-            final int index = i;
-            favoriteButton.get(i).getImageButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ButtonHolder btn = favoriteButton.get(index);
-                    AppHolder app = btn.getAppHolder();
-
-                    if (Manager.isFavorite(app)) {
-                        System.out.println("printing off");
-                        btn.setOn(view.getContext(), false);
-
-                        Manager.removeFavorite(view.getContext(), btn.getAppHolder());
-                        updateFavorites();
-                    } else {
-                        if (Manager.isInstalled(app)) {
-                            System.out.println("printing on");
-                            btn.setOn(view.getContext(), true);
-
-                            Manager.addFavorite(view.getContext(), app);
-                            updateFavorites();
-                        }
-                    }
-                }
-            });
-        }
-
-        for (int i = 0; i < apps.length; i++) {
-            appTexts.get(i).setText(apps[i].getAppName());
-            fixText(appTexts.get(i));
-            updateButton(i);
-        }
-
         for(int i = 0; i < apps.length; i++){
             final int index = i;
             buttons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (! Manager.isInstalled(apps[index])) {
+                    if (! Manager.isInstalled(view.getContext(), apps[index])) {
                         InstallUtility.install(view.getContext(), apps[index], Manager);
                     } else {
                         InstallUtility.launch(view.getContext(), apps[index]);
@@ -146,7 +107,7 @@ public class Platter extends AppCompatActivity {
         }
         cycleB.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 apps = Manager.cycle(view.getContext());
                 final ImageView[] views = new ImageView[4];
                 views[0] = (ImageView) findViewById(R.id.appIMG1);
@@ -163,10 +124,12 @@ public class Platter extends AppCompatActivity {
                         @Override
                         public void function() {
                             apps[index].loadIcon(views[index]);
-                            updateButton(index);
                             appTexts.get(index).setText(apps[index].getAppName());
                             fixText(appTexts.get(index));
-                            updateFavButton();
+                            favoriteButton.get(index).setOn(view.getContext(),
+                                    Manager.isInstalled(view.getContext(), apps[index]));
+
+                            updateEverything();
                         }
                     });
 
@@ -179,19 +142,94 @@ public class Platter extends AppCompatActivity {
             }
         });
 
+        updateEverything();
+
     }
 
     public void onResume(){
         super.onResume();
-        for(int i = 0; i < apps.length ;i++) {
+
+        updateEverything();
+    }
+
+    private void updateEverything() {
+        //UPDATE APPS
+        Manager.update(this);
+        for (AppHolder app : apps) {
+            Manager.addInstalled(this, app);
+        }
+        apps = Manager.getPlatter();
+
+        //UPDATE INSTALL BUTTONS
+
+        for(int i = 0; i < apps.length; i++){
+            final int index = i;
+            buttons.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (! Manager.isInstalled(view.getContext(), apps[index])) {
+                        InstallUtility.install(view.getContext(), apps[index], Manager);
+                    } else {
+                        InstallUtility.launch(view.getContext(), apps[index]);
+                    }
+                }
+            });
+        }
+        for (int i = 0; i < apps.length; i++) {
             appTexts.get(i).setText(apps[i].getAppName());
             fixText(appTexts.get(i));
             updateButton(i);
         }
 
-        Manager.update(this);
-        updateFavorites();
+        //UPDATE IMAGES
+        ImageView[] views = new ImageView[4];
+        views[0] = (ImageView) findViewById(R.id.appIMG1);
+        views[1] = (ImageView) findViewById(R.id.appIMG2);
+        views[2] = (ImageView) findViewById(R.id.appIMG3);
+        views[3] = (ImageView) findViewById(R.id.appIMG4);
+        for (int i = 0; i < apps.length; i++) {
+            apps[i].loadIcon(views[i]);
+        }
+
+        //UPDATE FAVORITES BUTTONS
+        favoriteButton = new ArrayList<ButtonHolder>();
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB1),
+                Manager.isInstalled(this, apps[0]) ,apps[0]));
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB2),
+                Manager.isInstalled(this, apps[1]) ,apps[1]));
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB3),
+                Manager.isInstalled(this, apps[2]), apps[2]));
+        favoriteButton.add(new ButtonHolder((ImageButton)findViewById(R.id.appFB4),
+                Manager.isInstalled(this, apps[3]),apps[3]));
         updateFavButton();
+        for(int i = 0; i < favoriteButton.size(); i++){
+            final int index = i;
+            favoriteButton.get(i).getImageButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ButtonHolder btn = favoriteButton.get(index);
+                    AppHolder app = btn.getAppHolder();
+
+                    if (Manager.isFavorite(app)) {
+                        System.out.println("printing off");
+                        btn.setOn(view.getContext(), false);
+
+                        Manager.removeFavorite(view.getContext(), btn.getAppHolder());
+                        updateFavorites();
+                    } else {
+                        if (Manager.isInstalled(view.getContext(), app)) {
+                            System.out.println("printing on");
+                            btn.setOn(view.getContext(), true);
+
+                            Manager.addFavorite(view.getContext(), app);
+                            updateFavorites();
+                        }
+                    }
+                }
+            });
+        }
+
+        updateFavorites();
     }
 
     private void updateFavorites() {
@@ -217,7 +255,7 @@ public class Platter extends AppCompatActivity {
                     for (AppHolder app : favorites) {
                         if (app.getAppName().equals(appName)) {
                             Manager.removeFavorite(c, app);
-                            updateFavorites();
+                            updateEverything();
                             return true;
                         }
                     }
@@ -245,7 +283,7 @@ public class Platter extends AppCompatActivity {
     private void updateButton(int num) {
         Manager.updateInstalled(this, apps[num]);
 
-        if (! Manager.isInstalled(apps[num])) {
+        if (! Manager.isInstalled(this, apps[num])) {
             buttons.get(num).setText("Install");
             buttons.get(num).setBackgroundColor(Color.CYAN);
         } else {
@@ -297,6 +335,7 @@ public class Platter extends AppCompatActivity {
             case android.R.id.home:
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.openDrawer(GravityCompat.START);
+                updateEverything();
                 return true;
         }
         return super.onOptionsItemSelected(item);
