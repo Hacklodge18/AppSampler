@@ -4,16 +4,38 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.downloader.Error;
+import com.downloader.OnCancelListener;
+import com.downloader.OnDownloadListener;
+import com.downloader.OnPauseListener;
+import com.downloader.OnProgressListener;
+import com.downloader.OnStartOrResumeListener;
+import com.downloader.PRDownloader;
+import com.downloader.Progress;
 import com.gc.android.market.api.MarketSession;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Scope;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * This class is for holding static functions relating to downloading, installing, and uninstalling apps.
@@ -50,10 +72,10 @@ public class InstallUtility {
             Intent goToMarket = new Intent(Intent.ACTION_VIEW)
                     .setData(Uri.parse("market://details?id=" + app.getPackageName()));
             c.startActivity(goToMarket);
+
+            //cancelDownload(app.getPackageName());
+            //deleteApk(c, app.getPackageName());
         }
-
-
-
 
 //        Intent browserIntent = new Intent(c, Browser.class);
 //        Bundle b = new Bundle();
@@ -97,6 +119,8 @@ public class InstallUtility {
 
     }
 
+    private static Map<String, Integer> currentDownloads = new HashMap<>();
+
     /**
      * Asynchronously downloads the apk for the given app in the background.
      * File path returned is not guaranteed to exist before apk is finished downloading.
@@ -105,7 +129,89 @@ public class InstallUtility {
      * @param packageName the package name of the app to be installed
      * @return the AppHolder information about the apk
      */
-    public static void downloadApkAsync(String packageName) {
-        String dlAddress = "https://apkpure.com/brawl-stars/" + packageName + "/download?from=details";
+    public static void downloadApkAsync(Context c, String packageName) {
+        final String dlAddress = "https://apkpure.com/brawl-stars/" + packageName + "/download?from=details";
+
+        if (isWifiEnabled(c)) {
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(dlAddress)
+                        .build();
+                Response response = client.newCall(request).execute();
+                response.body();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            final int downloadId = PRDownloader.download(dlAddress, c.getFilesDir().toString(), packageName)
+                    .build()
+                    .setOnStartOrResumeListener(new OnStartOrResumeListener() {
+                        @Override
+                        public void onStartOrResume() {
+                            System.out.println("Download started for " + dlAddress);
+                        }
+                    })
+                    .setOnPauseListener(new OnPauseListener() {
+                        @Override
+                        public void onPause() {
+                            System.out.println("Download paused for " + dlAddress);
+                        }
+                    })
+                    .setOnCancelListener(new OnCancelListener() {
+                        @Override
+                        public void onCancel() {
+                            currentDownloads.remove(dlAddress);
+                            System.out.println("Download cancelled for " + dlAddress);
+                        }
+                    })
+                    .setOnProgressListener(new OnProgressListener() {
+                        @Override
+                        public void onProgress(Progress progress) {
+
+                        }
+                    })
+                    .start(new OnDownloadListener() {
+                        @Override
+                        public void onDownloadComplete() {
+                            currentDownloads.remove(dlAddress);
+                            System.out.println("Download success for " + dlAddress);
+                        }
+
+                        @Override
+                        public void onError(Error error) {
+                            System.out.println("Download failed for " + dlAddress);
+                        }
+                    });
+            currentDownloads.put(dlAddress, downloadId);
+        }
+    }
+
+    public static void cancelDownload(String packageName) {
+        if (currentDownloads.containsKey(packageName)) {
+            PRDownloader.cancel(currentDownloads.get(packageName));
+        }
+    }
+
+    public static void deleteApk(Context c, String packageName) {
+        File f = new File(c.getFilesDir(), packageName);
+        if (f.exists()) {
+            f.delete();
+        } else {
+            System.out.println("File " + packageName + " does not exist!");
+        }
+    }
+
+    public static boolean isWifiEnabled(Context c) {
+        ConnectivityManager connectionManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        for (Network network : connectionManager.getAllNetworks()) {
+            NetworkInfo info = connectionManager.getNetworkInfo(network);
+            if (info.getType() == ConnectivityManager.TYPE_WIFI) {
+                return true;
+            }
+        }
+        return false;
     }
 }
