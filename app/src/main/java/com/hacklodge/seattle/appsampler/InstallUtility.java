@@ -42,12 +42,17 @@ public class InstallUtility {
      * @param app the information about the app to be installed
      */
     public static void install(Context c, AppHolder app, InstalledAppsManager manager) {
-        /*Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(app.getApkUri(), "application/vnd.android.package-archive");
-        c.startActivity(intent);*/
-        Intent goToMarket = new Intent(Intent.ACTION_VIEW)
-                .setData(Uri.parse("market://details?id=" + app.getPackageName()));
-        c.startActivity(goToMarket);
+        if (app.ApkIsDownloaded(c)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(app.getApk(c), "application/vnd.android.package-archive");
+            c.startActivity(intent);
+        } else {
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW)
+                    .setData(Uri.parse("market://details?id=" + app.getPackageName()));
+            c.startActivity(goToMarket);
+        }
+
+
 
 
 //        Intent browserIntent = new Intent(c, Browser.class);
@@ -56,7 +61,7 @@ public class InstallUtility {
 //        browserIntent.putExtras(b);
 //        c.startActivity(browserIntent);
 
-        manager.addInstalled(c, app);
+        manager.addInstalled(app);
     }
 
     /**
@@ -70,7 +75,7 @@ public class InstallUtility {
         intent.setData(Uri.parse("package:"+app.getPackageName()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         c.startActivity(intent);
-        manager.removeInstalled(c, app);
+        manager.removeInstalled(app);
     }
 
     /**
@@ -100,11 +105,7 @@ public class InstallUtility {
      * @param packageName the package name of the app to be installed
      * @return the AppHolder information about the apk
      */
-    public static AppHolder downloadApkAsync(String packageName) {
-        MarketSession session = new MarketSession();
-        GoogleSignInOptions signIn = new GoogleSignInOptions.Builder()
-                .requestScopes(new Scope(Scopes.PROFILE))
-                .build();
-        return null;
+    public static void downloadApkAsync(String packageName) {
+        String dlAddress = "https://apkpure.com/brawl-stars/" + packageName + "/download?from=details";
     }
 }
