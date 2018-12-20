@@ -17,11 +17,13 @@ public class AppHolder {
     private String packageName;
     private String appName;
     private String icon;
+    private String apk;
 
-    public AppHolder(String packageName, String appName, String icon) {
+    public AppHolder(String packageName, String appName, String icon, String apk) {
         this.packageName = packageName;
         this.appName = appName;
         this.icon = icon;
+        this.apk = apk;
     }
 
     public String getPackageName() {
@@ -51,6 +53,10 @@ public class AppHolder {
             return Uri.parse(f.toURI().toString());
         }
         return null;
+    }
+
+    public String getApkUrl() {
+        return apk;
     }
 
     @Override

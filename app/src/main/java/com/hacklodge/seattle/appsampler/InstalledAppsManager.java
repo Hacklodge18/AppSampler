@@ -152,13 +152,15 @@ public class InstalledAppsManager {
         if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LOAD");
 
         for (int i = 0; i < platter.length; i++) {
-            //InstallUtility.cancelDownload(platter[i].getPackageName());
-            //InstallUtility.deleteApk(context, platter[i].getPackageName());
+            if (platter[i] != null) {
+                //InstallUtility.cancelDownload(platter[i].getPackageName());
+                //InstallUtility.deleteApk(context, platter[i].getPackageName());
+            }
 
             int randIndex = (int) (Math.random()*allApps.length);
             platter[i] = allApps[randIndex];
 
-            //InstallUtility.downloadApkAsync(context, platter[i].getPackageName());
+            //InstallUtility.downloadApkAsync(context, platter[i]);
         }
 
         savePlatter();
@@ -316,7 +318,8 @@ public class InstalledAppsManager {
                 String name = jsonObject.getString("name");
                 String packageName = jsonObject.getString("package");
                 String iconURL = jsonObject.getString("icon");
-                appArray[i] = new AppHolder(packageName, name, iconURL);
+                String apkUrl = jsonObject.getString("url");
+                appArray[i] = new AppHolder(packageName, name, iconURL, apkUrl);
             }
 
             return appArray;

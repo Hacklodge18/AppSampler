@@ -1,6 +1,5 @@
 package com.hacklodge.seattle.appsampler;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.downloader.Error;
 import com.downloader.OnCancelListener;
@@ -21,21 +16,10 @@ import com.downloader.OnProgressListener;
 import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
-import com.gc.android.market.api.MarketSession;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.Scope;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * This class is for holding static functions relating to downloading, installing, and uninstalling apps.
@@ -126,27 +110,16 @@ public class InstallUtility {
      * File path returned is not guaranteed to exist before apk is finished downloading.
      * If the phone is rooted, it will silently uninstall previous apps and install new ones.
      *
-     * @param packageName the package name of the app to be installed
-     * @return the AppHolder information about the apk
+     * @param app the app information for the app that will be downloaded
      */
-    public static void downloadApkAsync(Context c, String packageName) {
-        final String dlAddress = "https://apkpure.com/brawl-stars/" + packageName + "/download?from=details";
+    public static void downloadApkAsync(Context c, final AppHolder app) {
+        final String dlAddress = app.getApkUrl();
 
         if (isWifiEnabled(c)) {
-            try {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(dlAddress)
-                        .build();
-                Response response = client.newCall(request).execute();
-                response.body();
 
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            final int downloadId = PRDownloader.download(dlAddress, c.getFilesDir().toString(), packageName)
+            final int downloadId = PRDownloader.download(dlAddress,
+                    c.getFilesDir().toString(),
+                    app.getPackageName())
                     .build()
                     .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                         @Override
@@ -163,7 +136,7 @@ public class InstallUtility {
                     .setOnCancelListener(new OnCancelListener() {
                         @Override
                         public void onCancel() {
-                            currentDownloads.remove(dlAddress);
+                            currentDownloads.remove(app.getPackageName());
                             System.out.println("Download cancelled for " + dlAddress);
                         }
                     })
@@ -176,7 +149,7 @@ public class InstallUtility {
                     .start(new OnDownloadListener() {
                         @Override
                         public void onDownloadComplete() {
-                            currentDownloads.remove(dlAddress);
+                            currentDownloads.remove(app.getPackageName());
                             System.out.println("Download success for " + dlAddress);
                         }
 
@@ -185,12 +158,13 @@ public class InstallUtility {
                             System.out.println("Download failed for " + dlAddress);
                         }
                     });
-            currentDownloads.put(dlAddress, downloadId);
+            currentDownloads.put(app.getPackageName(), downloadId);
         }
     }
 
     public static void cancelDownload(String packageName) {
         if (currentDownloads.containsKey(packageName)) {
+            System.out.println(packageName + "AAAB");
             PRDownloader.cancel(currentDownloads.get(packageName));
         }
     }
