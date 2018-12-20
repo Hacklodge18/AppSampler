@@ -44,13 +44,18 @@ public class Platter extends AppCompatActivity {
     ArrayList<TextView> appTexts;
     AppHolder[] apps;
     ArrayList<Button> buttons;
+    String[] colors;
 //    AppHolder a1 = new AppHolder("com.supercell.brawlstars","BrawlStar" , null);
 //    AppHolder a3 = new AppHolder("com.lemonjamstudio.infiniteknights","InfiniteKnight" , null);
 //    AppHolder a2 = new AppHolder("com.mochibits.wordtoword.google","wordtoword" , null);
 //    AppHolder a4 = new AppHolder("om.pinestreetcodeworks.TinyBubbles","TinnyBubbles" , null);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        colors = new String[4];
+        colors[0] = "#FFAB40";
+        colors[1] = "#B2FF59";
+        colors[2] = "#448AFF";
+        colors[3] = "#FF5252";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.container);
 
@@ -283,10 +288,9 @@ public class Platter extends AppCompatActivity {
 
     private void updateButton(int num) {
         Manager.updateInstalled(this, apps[num]);
-
         if (! Manager.isInstalled(this, apps[num])) {
             buttons.get(num).setText("Install");
-            buttons.get(num).setBackgroundColor(Color.CYAN);
+            buttons.get(num).setBackgroundColor(Color.parseColor(colors[num]));
         } else {
             buttons.get(num).setText("Play");
             buttons.get(num).setBackgroundColor(Color.GREEN);

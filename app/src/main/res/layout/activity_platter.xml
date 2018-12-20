@@ -19,13 +19,19 @@
         android:orientation="horizontal"
         android:layout_weight="2">
 
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_marginRight="10dp"
             android:id="@+id/element1"
             android:background="#2962FF"
-            android:layout_weight="1">
+            android:elevation="20dp"
+            android:layout_weight="1"
+            android:bottomLeftRadius="10dp"
+            android:bottomRightRadius="10dp"
+            android:topLeftRadius="10dp"
+            android:topRightRadius="10dp" >
 
             <ImageButton
                 android:id="@+id/appFB1"
