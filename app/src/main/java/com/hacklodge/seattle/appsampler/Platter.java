@@ -300,10 +300,11 @@ public class Platter extends AppCompatActivity {
         Manager.updateInstalled(this, apps[num]);
         if (! Manager.isInstalled(this, apps[num])) {
             buttons.get(num).setText("Install");
-            buttons.get(num).setBackgroundColor(Color.parseColor(colors[num]));
+            buttons.get(num).setBackgroundColor(Color.parseColor("#212121"));
+            buttons.get(num).setTextColor(Color.parseColor("#FFFFFF"));
         } else {
             buttons.get(num).setText("Play");
-            buttons.get(num).setBackgroundColor(Color.GREEN);
+            buttons.get(num).setBackgroundColor(Color.parseColor("##212121"));
         }
     }
     private void updateFavButton(){
