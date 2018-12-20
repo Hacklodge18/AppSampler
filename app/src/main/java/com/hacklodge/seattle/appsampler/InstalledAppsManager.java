@@ -64,7 +64,7 @@ public class InstalledAppsManager {
     }
 
     public void addFavorite(Context c, AppHolder app) {
-        if (isInstalled(app)) {
+        if (isInstalled(c, app)) {
             favorites.add(app);
             saveCurrentInstalled(c);
             saveFavorites(c);
@@ -74,7 +74,7 @@ public class InstalledAppsManager {
     public void removeFavorite(Context c, AppHolder app) {
         favorites.remove(app);
         saveFavorites(c);
-        if (isInstalled(app) && !inPlatter(app)) {
+        if (isInstalled(c, app) && !inPlatter(app)) {
             InstallUtility.uninstall(c, app, this);
         }
     }
@@ -84,11 +84,16 @@ public class InstalledAppsManager {
     }
 
     public boolean isFavorite(AppHolder app) {
-        return favorites.contains(app);
+        for (AppHolder check : favorites) {
+            if (check.equals(app)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void update(Context c) {
-        for (AppHolder app : installedPrograms) {
+        for (AppHolder app : installedPrograms.toArray(new AppHolder[0])) {
             if (! ensureInstalled(c, app.getPackageName())) {
                 installedPrograms.remove(app);
                 favorites.remove(app);
@@ -102,20 +107,21 @@ public class InstalledAppsManager {
      * @param app
      * @return
      */
-    public boolean isInstalled(AppHolder app) {
-        return installedPrograms.contains(app);
+    public boolean isInstalled(Context c, AppHolder app) {
+        System.out.println("boob" + ensureInstalled(c, app.getPackageName()));
+        return ensureInstalled(c, app.getPackageName());//installedPrograms.contains(app);
     }
 
     public List<AppHolder> shouldBeUninstalled() {
         List<AppHolder> apps = new ArrayList<>();
         for (AppHolder installed : installedPrograms) {
-            if (favorites.contains(installed)) continue;
-            
-            apps.add(installed);
+            if (! isFavorite(installed)) {
+                apps.add(installed);
 
-            for (AppHolder shown : platter) {
-                if (installed.equals(shown)) {
-                    apps.remove(installed);
+                for (AppHolder shown : platter) {
+                    if (installed.equals(shown)) {
+                        apps.remove(installed);
+                    }
                 }
             }
         }
