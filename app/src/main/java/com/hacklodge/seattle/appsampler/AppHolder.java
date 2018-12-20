@@ -1,9 +1,12 @@
 package com.hacklodge.seattle.appsampler;
 
+import android.content.Context;
 import android.net.Uri;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * This class holds information about an app needed to install and launch the app. These include
@@ -35,6 +38,19 @@ public class AppHolder {
 
     public void loadIcon(ImageView imageView) {
         Picasso.get().load(Uri.parse(icon)).into(imageView);
+    }
+
+    public boolean ApkIsDownloaded(Context c) {
+        return getApk(c) != null;
+    }
+
+    public Uri getApk(Context c) {
+        File dir = c.getFilesDir();
+        File f = new File(dir, packageName);
+        if (f.exists()) {
+            return Uri.parse(f.toURI().toString());
+        }
+        return null;
     }
 
     @Override

@@ -32,50 +32,54 @@ public class InstalledAppsManager {
 
     private Set<AppHolder> favorites;
 
+    private Context context;
+
     private AppHolder[] platter = new AppHolder[4];
     public InstalledAppsManager(Context c) {
-        installedPrograms = load(c, INSTALL_LIST_FILENAME);
-        favorites = load(c, FAVORITES_FILENAME);
-        loadPlatter(c);
-        savePlatter(c);
+        context = c;
+
+        installedPrograms = load(INSTALL_LIST_FILENAME);
+        favorites = load(FAVORITES_FILENAME);
+        loadPlatter();
+        savePlatter();
     }
 
-    public void updateInstalled(Context c, AppHolder app) {
-        if (ensureInstalled(c, app.getPackageName()) && !installedPrograms.contains(app)) {
-            addInstalled(c, app);
+    public void updateInstalled(AppHolder app) {
+        if (ensureInstalled(app.getPackageName()) && !installedPrograms.contains(app)) {
+            addInstalled(app);
         }
-        if (!ensureInstalled(c, app.getPackageName()) && installedPrograms.contains(app)) {
-            removeInstalled(c, app);
+        if (!ensureInstalled(app.getPackageName()) && installedPrograms.contains(app)) {
+            removeInstalled(app);
         }
     }
 
-    public void addInstalled(Context c, AppHolder app) {
-        if (ensureInstalled(c, app.getPackageName())) {
+    public void addInstalled(AppHolder app) {
+        if (ensureInstalled(app.getPackageName())) {
             installedPrograms.add(app);
-            saveCurrentInstalled(c);
+            saveCurrentInstalled();
         }
     }
 
-    public void removeInstalled(Context c, AppHolder app) {
-        if (!ensureInstalled(c, app.getPackageName())) {
+    public void removeInstalled(AppHolder app) {
+        if (!ensureInstalled(app.getPackageName())) {
             installedPrograms.remove(app);
-            saveCurrentInstalled(c);
+            saveCurrentInstalled();
         }
     }
 
-    public void addFavorite(Context c, AppHolder app) {
-        if (isInstalled(c, app)) {
+    public void addFavorite(AppHolder app) {
+        if (isInstalled(app)) {
             favorites.add(app);
-            saveCurrentInstalled(c);
-            saveFavorites(c);
+            saveCurrentInstalled();
+            saveFavorites();
         }
     }
 
-    public void removeFavorite(Context c, AppHolder app) {
+    public void removeFavorite(AppHolder app) {
         favorites.remove(app);
-        saveFavorites(c);
-        if (isInstalled(c, app) && !inPlatter(app)) {
-            InstallUtility.uninstall(c, app, this);
+        saveFavorites();
+        if (isInstalled(app) && !inPlatter(app)) {
+            InstallUtility.uninstall(context, app, this);
         }
     }
 
@@ -92,9 +96,9 @@ public class InstalledAppsManager {
         return false;
     }
 
-    public void update(Context c) {
+    public void update() {
         for (AppHolder app : installedPrograms.toArray(new AppHolder[0])) {
-            if (! ensureInstalled(c, app.getPackageName())) {
+            if (! ensureInstalled(app.getPackageName())) {
                 installedPrograms.remove(app);
                 favorites.remove(app);
             }
@@ -107,8 +111,8 @@ public class InstalledAppsManager {
      * @param app
      * @return
      */
-    public boolean isInstalled(Context c, AppHolder app) {
-        return ensureInstalled(c, app.getPackageName());//installedPrograms.contains(app);
+    public boolean isInstalled(AppHolder app) {
+        return ensureInstalled(app.getPackageName());//installedPrograms.contains(app);
     }
 
     public List<AppHolder> shouldBeUninstalled() {
@@ -127,11 +131,11 @@ public class InstalledAppsManager {
         return apps;
     }
 
-    private boolean ensureInstalled(Context c, String packageName) {
+    private boolean ensureInstalled(String packageName) {
         boolean found = true;
 
         try {
-            c.getPackageManager().getPackageInfo(packageName, 0);
+            context.getPackageManager().getPackageInfo(packageName, 0);
         } catch (PackageManager.NameNotFoundException e) {
             found = false;
         }
@@ -141,11 +145,10 @@ public class InstalledAppsManager {
 
     /**
      * Updates the current platter with new, randomly selected games.
-     * @param c the context this function was called from
      * @return the current platter
      */
-    public AppHolder[] cycle(Context c) {
-        AppHolder[] allApps = loadAppList(c);
+    public AppHolder[] cycle() {
+        AppHolder[] allApps = loadAppList();
         if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LAOD");
 
         for (int i = 0; i < platter.length; i++) {
@@ -153,8 +156,19 @@ public class InstalledAppsManager {
             platter[i] = allApps[randIndex];
         }
 
-        savePlatter(c);
+        savePlatter();
         return getPlatter();
+    }
+
+    public AppHolder getAppHolder(String packageName) {
+        AppHolder[] allApps = loadAppList();
+        for (AppHolder app : allApps) {
+            if (app.getPackageName().equals(packageName)) {
+                return app;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -163,8 +177,8 @@ public class InstalledAppsManager {
      * @return true if updates are found
      */
     @Deprecated
-    public boolean checkForUpdates(Context c) {
-        AppHolder[] allApps = loadAppList(c);
+    public boolean checkForUpdates() {
+        AppHolder[] allApps = loadAppList();
         if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LAOD");
 
         int platterIndex = 0;//findPlatterIndex();
@@ -211,13 +225,13 @@ public class InstalledAppsManager {
     // SAVE AND LOAD FUNCTIONS BELOW THIS POINT
     //=======================================================================================================
 
-    private void saveFavorites(Context c) {
-        saveAppHolders(c, favorites.toArray(new AppHolder[0]), FAVORITES_FILENAME);
+    private void saveFavorites() {
+        saveAppHolders(favorites.toArray(new AppHolder[0]), FAVORITES_FILENAME);
     }
 
-    private Set<AppHolder> load(Context c, String filename) {
+    private Set<AppHolder> load(String filename) {
         Set<AppHolder> result = new HashSet<>();
-        File dir = c.getFilesDir();
+        File dir = context.getFilesDir();
         File installList = new File(dir, filename);
 
         try {
@@ -226,7 +240,7 @@ public class InstalledAppsManager {
             AppHolder[] arr = loadFromJSON(decodedContent);
             if (arr == null) return result;
             for (AppHolder app : arr) {
-                if (! result.contains(app) && ensureInstalled(c, app.getPackageName())) {
+                if (! result.contains(app) && ensureInstalled(app.getPackageName())) {
                     result.add(app);
                 }
             }
@@ -240,8 +254,8 @@ public class InstalledAppsManager {
         return result;
     }
 
-    private void loadPlatter(Context c) {
-        File dir = c.getFilesDir();
+    private void loadPlatter() {
+        File dir = context.getFilesDir();
         File platterList = new File(dir, PLATTER_FILENAME);
         try {
             byte[] content = Files.readAllBytes(platterList.toPath());
@@ -259,13 +273,13 @@ public class InstalledAppsManager {
             } catch (IOException e2) {
                 e2.printStackTrace();
             }
-            cycle(c);
+            cycle();
         }
     }
 
-    private AppHolder[] loadAppList(Context c) {
+    private AppHolder[] loadAppList() {
         try {
-            String json = loadJSONFile(c.getAssets().open("AppList.json"));
+            String json = loadJSONFile(context.getAssets().open("AppList.json"));
             return loadFromJSON(json);
         } catch (IOException e) {
             e.printStackTrace();
@@ -307,15 +321,15 @@ public class InstalledAppsManager {
         }
     }
 
-    public void saveCurrentInstalled(Context c) {
-        saveAppHolders(c, installedPrograms.toArray(new AppHolder[0]), INSTALL_LIST_FILENAME);
+    public void saveCurrentInstalled() {
+        saveAppHolders(installedPrograms.toArray(new AppHolder[0]), INSTALL_LIST_FILENAME);
     }
 
-    public void savePlatter(Context c) {
-        saveAppHolders(c, platter, PLATTER_FILENAME);
+    public void savePlatter() {
+        saveAppHolders(platter, PLATTER_FILENAME);
     }
 
-    private void saveAppHolders(Context c, AppHolder[] apps, String filename) {
+    private void saveAppHolders(AppHolder[] apps, String filename) {
         JSONArray array = new JSONArray();
         for (AppHolder app : apps) {
             JSONObject obj = new JSONObject();
@@ -327,7 +341,7 @@ public class InstalledAppsManager {
             array.put(obj);
         }
 
-        File dir = c.getFilesDir();
+        File dir = context.getFilesDir();
         File file = new File(dir, filename);
         try {
             BufferedWriter output = new BufferedWriter(new FileWriter(file));
