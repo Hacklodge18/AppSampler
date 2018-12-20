@@ -32,4 +32,6 @@ dependencies {
     implementation files('libs/androidmarketapi-0.6.jar')
     implementation 'com.google.android.gms:play-services-identity:16.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.mindorks.android:prdownloader:0.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 }

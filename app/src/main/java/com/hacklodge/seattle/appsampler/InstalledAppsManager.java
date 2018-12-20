@@ -149,11 +149,16 @@ public class InstalledAppsManager {
      */
     public AppHolder[] cycle() {
         AppHolder[] allApps = loadAppList();
-        if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LAOD");
+        if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LOAD");
 
         for (int i = 0; i < platter.length; i++) {
+            //InstallUtility.cancelDownload(platter[i].getPackageName());
+            //InstallUtility.deleteApk(context, platter[i].getPackageName());
+
             int randIndex = (int) (Math.random()*allApps.length);
             platter[i] = allApps[randIndex];
+
+            //InstallUtility.downloadApkAsync(context, platter[i].getPackageName());
         }
 
         savePlatter();

@@ -21,6 +21,8 @@ import java.util.*;
 import android.widget.ImageView;
 import android.widget.ImageButton;
 
+import com.downloader.PRDownloader;
+
 import java.util.logging.Handler;
 
 
@@ -48,6 +50,8 @@ public class Platter extends AppCompatActivity {
         colors[3] = "#FF5252";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.container);
+
+        PRDownloader.initialize(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
