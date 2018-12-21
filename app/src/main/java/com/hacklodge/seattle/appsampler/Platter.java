@@ -39,6 +39,7 @@ public class Platter extends AppCompatActivity {
     ArrayList<Button> buttons;
     String[] genre;
     String cGenre;
+    Spinner genreDropDown;
 //    AppHolder a1 = new AppHolder("com.supercell.brawlstars","BrawlStar" , null);
 //    AppHolder a3 = new AppHolder("com.lemonjamstudio.infiniteknights","InfiniteKnight" , null);
 //    AppHolder a2 = new AppHolder("com.mochibits.wordtoword.google","wordtoword" , null);
@@ -47,7 +48,7 @@ public class Platter extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.container);
-        Spinner genreDropDown = findViewById(R.id.spinner1);
+        genreDropDown = findViewById(R.id.spinner1);
         String[] genre = {"all","action","arcade","card","casual","music","racing","simulation","strategy","word","adventure","board","puzzle","role-playing","trivia","sports"};
         PRDownloader.initialize(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genre);
