@@ -7,21 +7,7 @@ class ApklinkerSpider(scrapy.Spider):
     name = 'apklinker'
     
     start_urls=[
-        'https://apkpure.com/game_action',
-        'https://apkpure.com/game_arcade',
-        'https://apkpure.com/game_card',
-        'https://apkpure.com/game_casual',
-        'https://apkpure.com/game_music',
-        'https://apkpure.com/game_racing',
-        'https://apkpure.com/game_simulation',
-        'https://apkpure.com/game_strategy',
-        'https://apkpure.com/game_word',
-        'https://apkpure.com/game_adventure',
-        'https://apkpure.com/game_board',
-        'https://apkpure.com/game_puzzle',
-        'https://apkpure.com/game_role_playing',
-        'https://apkpure.com/game_trivia',
-        'https://apkpure.com/game_sports'
+        'https://apkpure.com/game_action'
     ]
 
     def parse(self, response):

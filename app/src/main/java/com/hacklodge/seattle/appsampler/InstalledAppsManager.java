@@ -162,8 +162,8 @@ public class InstalledAppsManager {
      * Updates the current platter with new, randomly selected games.
      * @return the current platter
      */
-    public AppHolder[] cycle() {
-        AppHolder[] allApps = loadAppList();
+    public AppHolder[] cycle(String genre) {
+        AppHolder[] allApps = loadAppList(genre);
         if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LOAD");
 
         for (int i = 0; i < platter.length; i++) {
@@ -183,7 +183,7 @@ public class InstalledAppsManager {
     }
 
     public AppHolder getAppHolder(String packageName) {
-        AppHolder[] allApps = loadAppList();
+        AppHolder[] allApps = loadAppList("all");
         for (AppHolder app : allApps) {
             if (app.getPackageName().equals(packageName)) {
                 return app;
@@ -200,7 +200,7 @@ public class InstalledAppsManager {
      */
     @Deprecated
     public boolean checkForUpdates() {
-        AppHolder[] allApps = loadAppList();
+        AppHolder[] allApps = loadAppList("all");
         if (allApps == null) throw new NullPointerException("ALL APPS FAILED TO LAOD");
 
         int platterIndex = 0;//findPlatterIndex();
@@ -295,13 +295,14 @@ public class InstalledAppsManager {
             } catch (IOException e2) {
                 e2.printStackTrace();
             }
-            cycle();
+            cycle("all");
         }
     }
 
-    private AppHolder[] loadAppList() {
+    private AppHolder[] loadAppList(String genre) {
         try {
-            String json = loadJSONFile(context.getAssets().open("AppList.json"));
+            if (genre.equals("all")) genre = "";
+            String json = loadJSONFile(context.getAssets().open("AppList" + genre + ".json"));
             return loadFromJSON(json);
         } catch (IOException e) {
             e.printStackTrace();
