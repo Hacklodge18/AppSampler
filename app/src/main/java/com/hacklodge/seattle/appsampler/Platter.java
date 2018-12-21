@@ -3,6 +3,7 @@ package com.hacklodge.seattle.appsampler;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,9 +28,12 @@ import android.widget.ArrayAdapter;
 import java.util.logging.Handler;
 import android.widget.Spinner;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.AdSize;
 public class Platter extends AppCompatActivity {
     InstalledAppsManager Manager;
-
+    private AdView mAdView;
     Button cycleB;
     ArrayList<ButtonHolder> favoriteButton;
     SubMenu favoritesMenu;
@@ -49,7 +53,13 @@ public class Platter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.container);
         MobileAds.initialize(this, "ca-app-pub-4157098826653042~2428164120");
+        AdView adView = new AdView(this.getApplicationContext());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
         genreDropDown = findViewById(R.id.spinner1);
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         String[] genre = {"all","action","arcade","card","casual","music","racing","simulation","strategy","word","adventure","board","puzzle","role-playing","trivia","sports"};
         PRDownloader.initialize(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genre);
@@ -66,7 +76,7 @@ public class Platter extends AppCompatActivity {
         apps = Manager.getPlatter();
         ImageView appIMG1 = (ImageView) findViewById(R.id.appIMG1);
         apps[0].loadIcon(appIMG1);
-        ImageView appIMG2 = (ImageView) findViewById(R.id.appIMG2);
+        ImageView appIMG2 = (ImageView) findViewById( R.id.appIMG2);
         apps[1].loadIcon(appIMG2);
         ImageView appIMG3 = (ImageView) findViewById(R.id.appIMG3);
         apps[2].loadIcon(appIMG3);

@@ -21,7 +21,7 @@
     <style name="GalaxyZooThemeToolbarDarkOverflow" parent="Theme.AppCompat.NoActionBar">
         <!-- android:textColorPrimary is the  color of the title text
              in the Toolbar, in the Theme.AppCompat theme:  -->
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorPrimary">#212121</item>
 
         <!-- android:textColorPrimaryInverse is the  color of the title
              text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
@@ -34,10 +34,10 @@
               when running on API 21, but not on older versions of
               Android, so this is only necessary to support older
               Android versions.-->
-        <item name="actionMenuTextColor">@color/abc_primary_text_material_dark</item>
+        <item name="actionMenuTextColor">#212121</item>
         <!-- android:textColorSecondary is the color of the menu
              overflow icon (three vertical dots) -->
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
+        <item name="android:textColorSecondary">#212121</item>
 
         <!-- This would set the toolbar's background color,
               but setting this also changes the popup menu's background,
