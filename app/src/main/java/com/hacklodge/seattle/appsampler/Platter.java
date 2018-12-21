@@ -105,7 +105,7 @@ public class Platter extends AppCompatActivity {
         cycleB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                apps = Manager.cycle();
+                apps = Manager.cycle(genreDropDown.getSelectedItem().toString());
                 final ImageView[] views = new ImageView[4];
                 views[0] = (ImageView) findViewById(R.id.appIMG1);
                 views[1] = (ImageView) findViewById(R.id.appIMG2);
