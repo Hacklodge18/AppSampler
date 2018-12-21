@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.jar.JarFile;
 
 /**
  * This class holds information about an app needed to install and launch the app. These include
@@ -44,25 +45,40 @@ public class AppHolder {
     }
 
     public boolean ApkIsDownloaded(Context c) {
-        return getApk(c) != null;
+        Uri uri = getApk(c);
+        if (uri != null) {
+            return isApkCorrupt(uri);
+        }
+        return false;
     }
 
     public Uri getApk(Context c) {
-        if (InstallUtility.isExternalStorageReadable()) {
+        /*if (InstallUtility.isExternalStorageReadable()) {
             File dir = c.getExternalCacheDir();
             File f = new File(dir, packageName);
             if (f.exists()) {
-                return null;
-                /*return FileProvider.getUriForFile(c,
-                        c.getApplicationContext().getPackageName() + ".com.hacklodge.seattle",
-                        f );*/
+                //return null;
+                return FileProvider.getUriForFile(c,
+                        c.getApplicationContext().getPackageName() + ".com.hacklodge.seattle.provider",
+                        f );
 
             }
             return null;
         } else {
             return null;
+        }*/
+        return null;
+    }
+
+    public static boolean isApkCorrupt(Uri filepath) {
+        boolean corruptedApkFile = false;
+        try {
+            new JarFile(filepath.toString()); //Detect if the file have been corrupted
+        } catch (Exception ex) {
+            corruptedApkFile = true;
         }
 
+        return corruptedApkFile;
     }
 
     public String getApkUrl() {
