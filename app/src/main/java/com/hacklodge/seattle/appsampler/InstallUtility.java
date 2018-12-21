@@ -50,9 +50,18 @@ public class InstallUtility {
      */
     public static void install(Context c, AppHolder app, InstalledAppsManager manager) {
         if (app.ApkIsDownloaded(c)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(app.getApk(c), "application/vnd.android.package-archive");
-            c.startActivity(intent);
+
+            if (c.getPackageManager().canRequestPackageInstalls()) {
+                System.out.println("Installing! " + app.getApk(c).toString());
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(app.getApk(c), "application/vnd.android.package-archive");
+                c.startActivity(intent);
+            } else {
+                c.startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                        Uri.parse("package:com.hacklodge.seattle.appsampler")));
+            }
+
         } else {
             Intent goToMarket = new Intent(Intent.ACTION_VIEW)
                     .setData(Uri.parse("market://details?id=" + app.getPackageName()));
@@ -114,7 +123,7 @@ public class InstallUtility {
      * @param app the app information for the app that will be downloaded
      */
     public static void downloadApkAsync(Context c, final AppHolder app) {
-        final String dlAddress = app.getApkUrl();
+        /*final String dlAddress = app.getApkUrl();
         if (dlAddress == null) return;
 
         if (isWifiEnabled(c) && isExternalStorageWritable()) {
@@ -162,26 +171,26 @@ public class InstallUtility {
                         }
                     });
             currentDownloads.put(app.getPackageName(), downloadId);
-        }
+        }*/
     }
 
     public static void cancelDownload(String packageName) {
-        if (currentDownloads.containsKey(packageName)) {
+        /*if (currentDownloads.containsKey(packageName)) {
             int id = currentDownloads.get(packageName);
             PRDownloader.cancel(id);
 
-        }
+        }*/
     }
 
     public static void deleteApk(Context c, AppHolder app) {
-        if (isExternalStorageWritable()) {
+        /*if (isExternalStorageWritable()) {
 
             Uri apk = app.getApk(c);
             if (apk != null) {
                 File f = new File(apk.toString());
                 f.delete();
             }
-        }
+        }*/
     }
 
     public static boolean isWifiEnabled(Context c) {

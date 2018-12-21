@@ -166,6 +166,7 @@ public class Platter extends AppCompatActivity {
                     if (! Manager.isInstalled(apps[index])) {
                         InstallUtility.install(view.getContext(), apps[index], Manager);
                     } else {
+                        InstallUtility.deleteApk(view.getContext(), apps[index]);
                         InstallUtility.launch(view.getContext(), apps[index]);
                     }
                 }
