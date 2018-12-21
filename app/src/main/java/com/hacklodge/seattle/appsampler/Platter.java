@@ -26,7 +26,7 @@ import com.downloader.PRDownloader;
 import android.widget.ArrayAdapter;
 import java.util.logging.Handler;
 import android.widget.Spinner;
-
+import com.google.android.gms.ads.MobileAds;
 public class Platter extends AppCompatActivity {
     InstalledAppsManager Manager;
 
@@ -48,6 +48,7 @@ public class Platter extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.container);
+        MobileAds.initialize(this, "ca-app-pub-4157098826653042~2428164120");
         genreDropDown = findViewById(R.id.spinner1);
         String[] genre = {"all","action","arcade","card","casual","music","racing","simulation","strategy","word","adventure","board","puzzle","role-playing","trivia","sports"};
         PRDownloader.initialize(this);
