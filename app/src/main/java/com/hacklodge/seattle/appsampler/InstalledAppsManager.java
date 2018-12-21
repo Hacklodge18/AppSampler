@@ -168,14 +168,14 @@ public class InstalledAppsManager {
 
         for (int i = 0; i < platter.length; i++) {
             if (platter[i] != null) {
-                //InstallUtility.cancelDownload(platter[i].getPackageName());
-                //InstallUtility.deleteApk(context, platter[i].getPackageName());
+                InstallUtility.cancelDownload(platter[i].getPackageName());
+                InstallUtility.deleteApk(context, platter[i]);
             }
 
             int randIndex = (int) (Math.random()*allApps.length);
             platter[i] = allApps[randIndex];
 
-            //InstallUtility.downloadApkAsync(context, platter[i]);
+            InstallUtility.downloadApkAsync(context, platter[i]);
         }
 
         savePlatter();
@@ -363,6 +363,7 @@ public class InstalledAppsManager {
                 obj.put("name", app.getAppName());
                 obj.put("package", app.getPackageName());
                 obj.put("icon", app.getIcon());
+                obj.put("url", app.getApkUrl());
             } catch (JSONException e) {continue;}
             array.put(obj);
         }

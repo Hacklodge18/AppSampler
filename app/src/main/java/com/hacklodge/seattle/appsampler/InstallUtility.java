@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 
 import com.downloader.Error;
 import com.downloader.OnCancelListener;
@@ -57,8 +58,8 @@ public class InstallUtility {
                     .setData(Uri.parse("market://details?id=" + app.getPackageName()));
             c.startActivity(goToMarket);
 
-            //cancelDownload(app.getPackageName());
-            //deleteApk(c, app.getPackageName());
+            cancelDownload(app.getPackageName());
+            deleteApk(c, app);
         }
 
 //        Intent browserIntent = new Intent(c, Browser.class);
@@ -114,48 +115,50 @@ public class InstallUtility {
      */
     public static void downloadApkAsync(Context c, final AppHolder app) {
         final String dlAddress = app.getApkUrl();
+        if (dlAddress == null) return;
 
-        if (isWifiEnabled(c)) {
+        if (isWifiEnabled(c) && isExternalStorageWritable()) {
 
             final int downloadId = PRDownloader.download(dlAddress,
-                    c.getFilesDir().toString(),
+                    c.getExternalCacheDir().toString(),
                     app.getPackageName())
                     .build()
                     .setOnStartOrResumeListener(new OnStartOrResumeListener() {
                         @Override
                         public void onStartOrResume() {
-                            System.out.println("Download started for " + dlAddress);
+                            System.out.println("Download started for " + app.getAppName());
                         }
                     })
                     .setOnPauseListener(new OnPauseListener() {
                         @Override
                         public void onPause() {
-                            System.out.println("Download paused for " + dlAddress);
+                            System.out.println("Download paused for " + app.getAppName());
                         }
                     })
                     .setOnCancelListener(new OnCancelListener() {
                         @Override
                         public void onCancel() {
                             currentDownloads.remove(app.getPackageName());
-                            System.out.println("Download cancelled for " + dlAddress);
+                            System.out.println("Download cancelled for " + app.getAppName());
                         }
                     })
                     .setOnProgressListener(new OnProgressListener() {
                         @Override
                         public void onProgress(Progress progress) {
-
+                           System.out.println("Current progress for " + app.getAppName() + ": "
+                                   + ((double) progress.currentBytes / (double) progress.totalBytes));
                         }
                     })
                     .start(new OnDownloadListener() {
                         @Override
                         public void onDownloadComplete() {
                             currentDownloads.remove(app.getPackageName());
-                            System.out.println("Download success for " + dlAddress);
+                            System.out.println("Download success for " + app.getAppName());
                         }
 
                         @Override
                         public void onError(Error error) {
-                            System.out.println("Download failed for " + dlAddress);
+                            System.out.println("Download failed for " + app.getAppName());
                         }
                     });
             currentDownloads.put(app.getPackageName(), downloadId);
@@ -164,17 +167,20 @@ public class InstallUtility {
 
     public static void cancelDownload(String packageName) {
         if (currentDownloads.containsKey(packageName)) {
-            System.out.println(packageName + "AAAB");
-            PRDownloader.cancel(currentDownloads.get(packageName));
+            int id = currentDownloads.get(packageName);
+            PRDownloader.cancel(id);
+
         }
     }
 
-    public static void deleteApk(Context c, String packageName) {
-        File f = new File(c.getFilesDir(), packageName);
-        if (f.exists()) {
-            f.delete();
-        } else {
-            System.out.println("File " + packageName + " does not exist!");
+    public static void deleteApk(Context c, AppHolder app) {
+        if (isExternalStorageWritable()) {
+
+            Uri apk = app.getApk(c);
+            if (apk != null) {
+                File f = new File(apk.toString());
+                f.delete();
+            }
         }
     }
 
@@ -185,6 +191,25 @@ public class InstallUtility {
             if (info.getType() == ConnectivityManager.TYPE_WIFI) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available for read and write */
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available to at least read */
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
         }
         return false;
     }

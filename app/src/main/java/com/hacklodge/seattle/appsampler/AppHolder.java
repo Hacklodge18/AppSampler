@@ -2,6 +2,7 @@ package com.hacklodge.seattle.appsampler;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -47,12 +48,21 @@ public class AppHolder {
     }
 
     public Uri getApk(Context c) {
-        File dir = c.getFilesDir();
-        File f = new File(dir, packageName);
-        if (f.exists()) {
-            return Uri.parse(f.toURI().toString());
+        if (InstallUtility.isExternalStorageReadable()) {
+            File dir = c.getExternalCacheDir();
+            File f = new File(dir, packageName);
+            if (f.exists()) {
+                return null;
+                /*return FileProvider.getUriForFile(c,
+                        c.getApplicationContext().getPackageName() + ".com.hacklodge.seattle",
+                        f );*/
+
+            }
+            return null;
+        } else {
+            return null;
         }
-        return null;
+
     }
 
     public String getApkUrl() {
