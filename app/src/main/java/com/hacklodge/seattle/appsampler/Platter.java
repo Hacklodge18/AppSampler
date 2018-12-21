@@ -23,9 +23,9 @@ import android.widget.ImageView;
 import android.widget.ImageButton;
 
 import com.downloader.PRDownloader;
-
+import android.widget.ArrayAdapter;
 import java.util.logging.Handler;
-
+import android.widget.Spinner;
 
 public class Platter extends AppCompatActivity {
     InstalledAppsManager Manager;
@@ -37,32 +37,28 @@ public class Platter extends AppCompatActivity {
     ArrayList<TextView> appTexts;
     AppHolder[] apps;
     ArrayList<Button> buttons;
-    String[] colors;
+    String[] genre;
+    String cGenre;
 //    AppHolder a1 = new AppHolder("com.supercell.brawlstars","BrawlStar" , null);
 //    AppHolder a3 = new AppHolder("com.lemonjamstudio.infiniteknights","InfiniteKnight" , null);
 //    AppHolder a2 = new AppHolder("com.mochibits.wordtoword.google","wordtoword" , null);
 //    AppHolder a4 = new AppHolder("om.pinestreetcodeworks.TinyBubbles","TinnyBubbles" , null);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        colors = new String[4];
-        colors[0] = "#FFAB40";
-        colors[1] = "#B2FF59";
-        colors[2] = "#448AFF";
-        colors[3] = "#FF5252";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.container);
-
+        Spinner genreDropDown = findViewById(R.id.spinner1);
+        String[] genre = {"all","action","arcade","card","casual","music","racing","simulation","strategy","word","adventure","board","puzzle","role-playing","trivia","sports"};
         PRDownloader.initialize(this);
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genre);
+        genreDropDown.setAdapter(adapter);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(android.R.drawable.btn_star_big_on);
-
 //        handler = new Handler();
         Manager = new InstalledAppsManager(this.getApplicationContext());
-
         updateFavorites();
 
         apps = Manager.getPlatter();
