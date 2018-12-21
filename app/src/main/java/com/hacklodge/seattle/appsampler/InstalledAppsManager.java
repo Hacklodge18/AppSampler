@@ -301,7 +301,12 @@ public class InstalledAppsManager {
 
     private AppHolder[] loadAppList(String genre) {
         try {
-            if (genre.equals("all")) genre = "";
+
+            if (genre.equals("all")) {
+                genre = "";
+            } else {
+                genre = "-" + genre;
+            }
             String json = loadJSONFile(context.getAssets().open("AppList" + genre + ".json"));
             return loadFromJSON(json);
         } catch (IOException e) {
